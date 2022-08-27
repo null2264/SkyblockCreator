@@ -110,20 +110,16 @@ public class StructureChunkGenerator extends ChunkGenerator {
 
     @Override
     public void buildSurface(ChunkRegion region, StructureAccessor structures, Chunk chunk) {
-        ChunkPos chunkPos = chunk.getPos();
         if(!fillmentBlock.isAir()) {
             int startX = chunk.getPos().getStartX();
             int startZ = chunk.getPos().getStartZ();
 
             BlockPos.iterate(startX, 0, startZ, startX + 15, getWorldHeight(), startZ + 15).forEach( blockPos -> chunk.setBlockState(blockPos, fillmentBlock, false));
         }
-        /* TODO: Bedrock layer
         if(enableTopBedrock || enableBottomBedrock) {
-            ChunkRandom chunkRandom = new ChunkRandom((AbstractRandom) new Random());
-            chunkRandom.setTerrainSeed(chunkPos.x, chunkPos.z);
+            ChunkRandom chunkRandom = new ChunkRandom(new Xoroshiro128PlusPlusRandom(RandomSeed.getSeed()));
             buildBedrock(chunk, chunkRandom);
         }
-         */
     }
 
     @Override
@@ -131,7 +127,7 @@ public class StructureChunkGenerator extends ChunkGenerator {
 
     @Override
     public int getWorldHeight() {
-        return 256;
+        return 320;
     }
 
     @Override
@@ -141,7 +137,7 @@ public class StructureChunkGenerator extends ChunkGenerator {
 
     @Override
     public int getMinimumY() {
-        return 0;
+        return -64;
     }
 
     @SuppressWarnings("ConstantConditions")
