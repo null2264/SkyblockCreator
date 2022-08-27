@@ -14,9 +14,16 @@ buildscript {
     }
 }
 
+// https://youtrack.jetbrains.com/issue/KTIJ-19369.
+@Suppress(
+    "DSL_SCOPE_VIOLATION",
+    "MISSING_DEPENDENCY_CLASS",
+    "UNRESOLVED_REFERENCE_WRONG_RECEIVER",
+    "FUNCTION_CALL_EXPECTED"
+)
 plugins {
     id("maven-publish")
-    id("fabric-loom")
+    id("fabric-loom") version project.property("loom_version") as String
     id("org.ajoberstar.grgit")
     id("com.matthewprenger.cursegradle")
     id("com.modrinth.minotaur")
@@ -57,8 +64,8 @@ fun getBranch(): String {
     return branch.substring(branch.lastIndexOf("/") + 1)
 }
 
-minecraft {
-    accessWidener("src/main/resources/structureworld.accesswidener")
+loom {
+    accessWidenerPath.set(file("src/main/resources/structureworld.accesswidener"))
 }
 
 repositories {

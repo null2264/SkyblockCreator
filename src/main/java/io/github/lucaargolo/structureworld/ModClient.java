@@ -4,7 +4,9 @@ import io.github.lucaargolo.structureworld.mixin.GeneratorTypeAccessor;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.world.GeneratorType;
+import net.minecraft.structure.StructureSet;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.DynamicRegistryManager;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
@@ -23,9 +25,12 @@ public class ModClient implements ClientModInitializer {
             String structure = structureWorldConfig.getStructureIdentifier();
             RegistryKey<Biome> biomeKey = RegistryKey.of(Registry.BIOME_KEY, new Identifier(structureWorldConfig.getBiomeIdentifier()));
             GeneratorType generatorType = new GeneratorType(structure) {
-                protected ChunkGenerator getChunkGenerator(Registry<Biome> biomeRegistry, Registry<ChunkGeneratorSettings> chunkGeneratorSettingsRegistry, long seed) {
+                @Override
+                protected ChunkGenerator getChunkGenerator(DynamicRegistryManager registryManager, long seed) {
+                    Registry<StructureSet> structureSetRegistry = registryManager.get(Registry.STRUCTURE_SET_KEY);
+                    Registry<Biome> biomeRegistry = registryManager.get(Registry.BIOME_KEY);
                     BlockState fillmentBlockState = Registry.BLOCK.get(new Identifier(structureWorldConfig.getFillmentBlockIdentifier())).getDefaultState();
-                    return new StructureChunkGenerator(new FixedBiomeSource(biomeRegistry.getOrThrow(biomeKey)), structure, structureWorldConfig.getStructureOffset(), structureWorldConfig.getPlayerSpawnOffset(), fillmentBlockState, structureWorldConfig.isTopBedrockEnabled(), structureWorldConfig.isBottomBedrockEnabled(), structureWorldConfig.isBedrockFlat());
+                    return new StructureChunkGenerator(structureSetRegistry, new FixedBiomeSource(biomeRegistry.getOrCreateEntry(biomeKey)), structure, structureWorldConfig.getStructureOffset(), structureWorldConfig.getPlayerSpawnOffset(), fillmentBlockState, structureWorldConfig.isTopBedrockEnabled(), structureWorldConfig.isBottomBedrockEnabled(), structureWorldConfig.isBedrockFlat());
                 }
             };
 

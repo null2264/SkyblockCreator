@@ -21,9 +21,9 @@ public class CreateWorldScreenMixin {
     @Inject(at = @At("HEAD"), method = "create", cancellable = true)
     private static void onCreate(Screen parent, CallbackInfoReturnable<CreateWorldScreen> callbackInfoReturnable) {
         if (ModClient.OVERRIDED_GENERATOR_TYPE != null) {
-            DynamicRegistryManager.Impl dynamicRegistryManager = DynamicRegistryManager.create();
+            DynamicRegistryManager dynamicRegistryManager = DynamicRegistryManager.createAndLoad();
             GeneratorOptions hackedGeneratorOptions = ModClient.OVERRIDED_GENERATOR_TYPE.createDefaultOptions(dynamicRegistryManager, 0L, true, false);
-            MoreOptionsDialog hackedOptionsDialog = new MoreOptionsDialog(dynamicRegistryManager, hackedGeneratorOptions, Optional.of(ModClient.OVERRIDED_GENERATOR_TYPE), OptionalLong.empty());
+            MoreOptionsDialog hackedOptionsDialog = new MoreOptionsDialog((DynamicRegistryManager.Immutable) dynamicRegistryManager, hackedGeneratorOptions, Optional.of(ModClient.OVERRIDED_GENERATOR_TYPE), OptionalLong.empty());
             CreateWorldScreen hackedWorldScreen = new CreateWorldScreen(parent, DataPackSettings.SAFE_MODE, hackedOptionsDialog);
             callbackInfoReturnable.setReturnValue(hackedWorldScreen);
         }

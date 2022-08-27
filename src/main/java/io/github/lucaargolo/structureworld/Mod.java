@@ -115,11 +115,10 @@ public class Mod implements ModInitializer {
     }
 
     public static void generateStructureFeature(StructureWorldAccess structureWorldAccess, ChunkGenerator chunkGenerator, Random random, BlockPos blockPos) {
-        if(!blockPos.isWithinDistance(BlockPos.ORIGIN, 2) || !(chunkGenerator instanceof StructureChunkGenerator)) {
+        if(!blockPos.isWithinDistance(BlockPos.ORIGIN, 2) || !(chunkGenerator instanceof StructureChunkGenerator structureChunkGenerator)) {
             return;
         }
 
-        StructureChunkGenerator structureChunkGenerator = (StructureChunkGenerator) chunkGenerator;
         Structure structure = Mod.STRUCTURES.get(structureChunkGenerator.getStructure());
         BlockPos structureOffset = structureChunkGenerator.getStructureOffset();
 

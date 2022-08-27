@@ -2,6 +2,8 @@ package io.github.lucaargolo.structureworld;
 
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.minecraft.block.BlockState;
+import net.minecraft.server.dedicated.ServerPropertiesHandler;
+import net.minecraft.structure.StructureSet;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.DynamicRegistryManager;
 import net.minecraft.util.registry.Registry;
@@ -14,8 +16,6 @@ import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.GeneratorOptions;
 import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Properties;
 
 public class ModServer implements DedicatedServerModInitializer {
 
@@ -36,12 +36,12 @@ public class ModServer implements DedicatedServerModInitializer {
 
     }
 
-    public static void fromPropertiesHook(DynamicRegistryManager dynamicRegistryManager, Properties properties, CallbackInfoReturnable<GeneratorOptions> info) {
+    public static void fromPropertiesHook(DynamicRegistryManager dynamicRegistryManager, ServerPropertiesHandler.WorldGenProperties properties, CallbackInfoReturnable<GeneratorOptions> info) {
         String levelType;
-        if(properties.getProperty("level-type") == null && OVERRIDED_LEVEL_TYPE != null) {
+        if(properties.levelType() == null && OVERRIDED_LEVEL_TYPE != null) {
             levelType = OVERRIDED_LEVEL_TYPE;
         }else{
-            levelType = properties.getProperty("level-type");
+            levelType = properties.levelType();
         }
         if(levelType.startsWith("structure_")) {
             Mod.CONFIG.getStructureWorldConfigs().forEach(structureWorldConfig -> {
@@ -51,12 +51,12 @@ public class ModServer implements DedicatedServerModInitializer {
                 if(levelType.equals("structure_"+structure)) {
                     Registry<DimensionType> dimensionTypeRegistry = dynamicRegistryManager.get(Registry.DIMENSION_TYPE_KEY);
                     Registry<Biome> biomeRegistry = dynamicRegistryManager.get(Registry.BIOME_KEY);
-                    Registry<ChunkGeneratorSettings> noiseSettingsRegistry = dynamicRegistryManager.get(Registry.CHUNK_GENERATOR_SETTINGS_KEY);
-                    SimpleRegistry<DimensionOptions> simpleRegistry = DimensionType.createDefaultDimensionOptions(dimensionTypeRegistry, biomeRegistry, noiseSettingsRegistry, 0L);
+                    Registry<DimensionOptions> simpleRegistry = DimensionType.createDefaultDimensionOptions(dynamicRegistryManager, 0L);
 
                     BlockState fillmentBlockState = Registry.BLOCK.get(new Identifier(structureWorldConfig.getFillmentBlockIdentifier())).getDefaultState();
-                    StructureChunkGenerator structureChunkGenerator = new StructureChunkGenerator(new FixedBiomeSource(biomeRegistry.getOrThrow(biomeKey)), structure, structureWorldConfig.getStructureOffset(), structureWorldConfig.getPlayerSpawnOffset(), fillmentBlockState, structureWorldConfig.isTopBedrockEnabled(), structureWorldConfig.isBottomBedrockEnabled(), structureWorldConfig.isBedrockFlat());
-                    SimpleRegistry<DimensionOptions> finalRegistry = GeneratorOptions.getRegistryWithReplacedOverworldGenerator(dimensionTypeRegistry, simpleRegistry, structureChunkGenerator);
+                    Registry<StructureSet> structureSetRegistry = dynamicRegistryManager.get(Registry.STRUCTURE_SET_KEY);
+                    StructureChunkGenerator structureChunkGenerator = new StructureChunkGenerator(structureSetRegistry, new FixedBiomeSource(biomeRegistry.getOrCreateEntry(biomeKey)), structure, structureWorldConfig.getStructureOffset(), structureWorldConfig.getPlayerSpawnOffset(), fillmentBlockState, structureWorldConfig.isTopBedrockEnabled(), structureWorldConfig.isBottomBedrockEnabled(), structureWorldConfig.isBedrockFlat());
+                    Registry<DimensionOptions> finalRegistry = GeneratorOptions.getRegistryWithReplacedOverworldGenerator(dimensionTypeRegistry, simpleRegistry, structureChunkGenerator);
                     info.setReturnValue(new GeneratorOptions(0L, false, false, finalRegistry));
                 }
             });
