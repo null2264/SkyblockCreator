@@ -4,11 +4,12 @@
   "package": "io.github.lucaargolo.structureworld.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "EntityPersistentDataMixin",
     "MinecraftServerMixin"
   ],
   "client": [
-    "GeneratorTypeAccessor",
-    "CreateWorldScreenMixin"
+    "CreateWorldScreenMixin",
+    "GeneratorTypeAccessor"
   ],
   "server": [
     "GeneratorOptionsMixin"
