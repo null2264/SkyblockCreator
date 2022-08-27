@@ -54,6 +54,7 @@ public class StructureWorldState extends PersistentState {
         return playerMap.get(playerEntity.getUuid());
     }
 
+    // TODO: Add spawn island (UUID = net.minecraft.util.Util.NIL_UUID)
     public BlockPos generateIsland(ServerWorld world, ServerPlayerEntity playerEntity) {
         int x = this.x;
         int y = this.y;

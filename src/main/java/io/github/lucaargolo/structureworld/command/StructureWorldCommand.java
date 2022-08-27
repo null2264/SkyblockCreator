@@ -16,6 +16,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 
 public class StructureWorldCommand {
+    // TODO: Add team support
 
     private static final SimpleCommandExceptionType INVALID_CHUNK_GENERATOR = new SimpleCommandExceptionType(new TranslatableText("commands.structureworld.invalid_chunk_generator"));
     private static final SimpleCommandExceptionType ISLAND_FOR_UUID_ALREADY_EXISTS = new SimpleCommandExceptionType(new TranslatableText("commands.structureworld.island_for_uuid_already_exists"));
