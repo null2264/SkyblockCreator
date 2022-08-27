@@ -77,7 +77,6 @@ public class StructureChunkGenerator extends ChunkGenerator {
 
     @Override
     public void generateFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor) {
-        super.generateFeatures(world, chunk, structureAccessor);
         ChunkRandom chunkRandom = new ChunkRandom(new Xoroshiro128PlusPlusRandom(RandomSeed.getSeed()));
         Mod.generateStructureFeature(world, this, chunkRandom, chunk.getPos().getBlockPos(0,0,0));
     }
