@@ -69,6 +69,7 @@ loom {
 }
 
 repositories {
+    maven("https://jitpack.io")
     maven {
         name = "Fabric"
         url = uri("https://maven.fabricmc.net/")

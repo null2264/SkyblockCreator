@@ -5,7 +5,8 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "EntityPersistentDataMixin",
-    "MinecraftServerMixin"
+    "MinecraftServerMixin",
+    "PlayerEntityMixin"
   ],
   "client": [
     "CreateWorldScreenMixin",

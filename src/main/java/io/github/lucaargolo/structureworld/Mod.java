@@ -5,17 +5,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import io.github.lucaargolo.structureworld.command.StructureWorldCommand;
-import io.github.lucaargolo.structureworld.event.PlayerJoinCallback;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.util.Identifier;
@@ -38,7 +33,6 @@ import java.util.stream.Collectors;
 public class Mod implements ModInitializer {
 
     public static final String MOD_ID = "structureworld";
-    public static String SPAWN_TAG = MOD_ID + ":alreadySpawned";
     public static final Logger LOGGER = LogManager.getLogger("Structure World");
     public static final HashMap<String, Structure> STRUCTURES = Maps.newHashMap();
     private static final JsonParser parser = new JsonParser();
@@ -132,22 +126,6 @@ public class Mod implements ModInitializer {
 
         CommandRegistrationCallback.EVENT.register(((dispatcher, dedicated) -> StructureWorldCommand.register(dispatcher)));
 
-        ServerEntityEvents.ENTITY_LOAD.register((Entity entity, ServerWorld world) -> {
-            if (world.isClient) {
-                return;
-            }
-
-            ChunkGenerator chunkGenerator = world.getChunkManager().getChunkGenerator();
-            if (!(chunkGenerator instanceof StructureChunkGenerator)) {
-                return;
-            }
-
-            if (!(entity instanceof PlayerEntity)) {
-                return;
-            }
-
-            PlayerJoinCallback.onPlayerJoin((PlayerEntity) entity, world);
-        });
     }
 
 }
