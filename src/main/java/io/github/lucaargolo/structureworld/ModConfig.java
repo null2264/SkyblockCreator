@@ -9,9 +9,9 @@ import java.util.List;
 public class ModConfig {
 
     private final List<StructureWorldConfig> structureWorldConfigs = Arrays.asList(
-            new StructureWorldConfig("simple_tree", "minecraft:forest", new double[]{-2, 0, -2}, new double[]{0, 8, 0}),
-            new StructureWorldConfig("classic_skyblock", "minecraft:plains", new double[]{-3, 0, -1}, new double[]{0, 3, 0}),
-            new StructureWorldConfig("stoneblock", "minecraft:plains", new double[]{-5, -2, -5}, new double[]{0.5, 0, 0.5}, "minecraft:stone", true, true)
+            new StructureWorldConfig("simple_tree", "minecraft:forest", new int[]{-2, 0, -2}, new int[]{0, 8, 0}),
+            new StructureWorldConfig("classic_skyblock", "minecraft:plains", new int[]{-3, 0, -1}, new int[]{0, 3, 0}),
+            new StructureWorldConfig("stoneblock", "minecraft:plains", new int[]{-5, -2, -5}, new int[]{0, 0, 0}, "minecraft:stone", true, true)
     );
     private int createPlatformPermissionLevel = 0;
     private int teleportToPlatformPermissionLevel = 0;
@@ -37,15 +37,15 @@ public class ModConfig {
 
         private final String structureIdentifier;
         private final String biomeIdentifier;
-        private final double[] structureOffset;
-        private final double[] playerSpawnOffset;
+        private final int[] structureOffset;
+        private final int[] playerSpawnOffset;
         private final boolean overridingDefault;
         private String fillmentBlockIdentifier;
         private boolean topBedrockEnabled;
         private boolean bottomBedrockEnabled;
         private boolean isBedrockFlat;
 
-        public StructureWorldConfig(String structureIdentifier, String biomeIdentifier, double[] structureOffset, double[] playerSpawnOffset) {
+        public StructureWorldConfig(String structureIdentifier, String biomeIdentifier, int[] structureOffset, int[] playerSpawnOffset) {
             this.structureIdentifier = structureIdentifier;
             this.biomeIdentifier = biomeIdentifier;
             this.structureOffset = structureOffset;
@@ -57,7 +57,7 @@ public class ModConfig {
             this.isBedrockFlat = false;
         }
 
-        public StructureWorldConfig(String structureIdentifier, String biomeIdentifier, double[] structureOffset, double[] playerSpawnOffset, String fillmentBlockIdentifier, boolean topBedrockEnabled, boolean bottomBedrockEnabled) {
+        public StructureWorldConfig(String structureIdentifier, String biomeIdentifier, int[] structureOffset, int[] playerSpawnOffset, String fillmentBlockIdentifier, boolean topBedrockEnabled, boolean bottomBedrockEnabled) {
             this(structureIdentifier, biomeIdentifier, structureOffset, playerSpawnOffset);
             this.fillmentBlockIdentifier = fillmentBlockIdentifier;
             this.topBedrockEnabled = topBedrockEnabled;
