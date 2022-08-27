@@ -10,9 +10,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Optional;
-import java.util.OptionalLong;
-
 @Mixin(value = GeneratorOptions.class, priority = -693)
 public abstract class GeneratorOptionsMixin {
 
@@ -22,8 +19,8 @@ public abstract class GeneratorOptionsMixin {
     }
 
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/dedicated/ServerPropertiesHandler$WorldGenProperties;levelType()Ljava/lang/String;"), method = "fromProperties")
-    private static<T> String onDefaultLevelType(ServerPropertiesHandler.WorldGenProperties instance) {
-        if(instance.levelType().equals("default") && ModServer.OVERRIDED_LEVEL_TYPE != null) {
+    private static <T> String onDefaultLevelType(ServerPropertiesHandler.WorldGenProperties instance) {
+        if (instance.levelType().equals("default") && ModServer.OVERRIDED_LEVEL_TYPE != null) {
             return ModServer.OVERRIDED_LEVEL_TYPE;
         }
         return instance.levelType();

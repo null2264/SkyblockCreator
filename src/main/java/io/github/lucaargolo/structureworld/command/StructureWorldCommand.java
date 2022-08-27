@@ -25,14 +25,14 @@ public class StructureWorldCommand {
             .literal("create")
             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(Mod.CONFIG.getCreatePlatformPermissionLevel()))
             .executes(context -> {
-                if(isNotStructureWorld(context)) {
+                if (isNotStructureWorld(context)) {
                     throw INVALID_CHUNK_GENERATOR.create();
                 }
                 ServerWorld serverWorld = context.getSource().getWorld();
                 ServerPlayerEntity playerEntity = context.getSource().getPlayer();
                 StructureWorldState structureWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
                 BlockPos islandPos = structureWorldState.getIsland(playerEntity);
-                if(islandPos != null) {
+                if (islandPos != null) {
                     throw ISLAND_FOR_UUID_ALREADY_EXISTS.create();
                 }
                 islandPos = structureWorldState.generateIsland(serverWorld, playerEntity);
@@ -43,14 +43,14 @@ public class StructureWorldCommand {
             .then(CommandManager.argument("player", EntityArgumentType.player())
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .executes(context -> {
-                        if(isNotStructureWorld(context)) {
+                        if (isNotStructureWorld(context)) {
                             throw INVALID_CHUNK_GENERATOR.create();
                         }
                         ServerWorld serverWorld = context.getSource().getWorld();
                         ServerPlayerEntity playerEntity = EntityArgumentType.getPlayer(context, "player");
                         StructureWorldState structureWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
                         BlockPos islandPos = structureWorldState.getIsland(playerEntity);
-                        if(islandPos != null) {
+                        if (islandPos != null) {
                             throw ISLAND_FOR_UUID_ALREADY_EXISTS.create();
                         }
                         islandPos = structureWorldState.generateIsland(serverWorld, playerEntity);
@@ -64,13 +64,13 @@ public class StructureWorldCommand {
             .literal("delete")
             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(Mod.CONFIG.getCreatePlatformPermissionLevel()))
             .executes(context -> {
-                if(isNotStructureWorld(context)) {
+                if (isNotStructureWorld(context)) {
                     throw INVALID_CHUNK_GENERATOR.create();
                 }
                 ServerPlayerEntity playerEntity = context.getSource().getPlayer();
                 StructureWorldState structureWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
                 BlockPos islandPos = structureWorldState.getIsland(playerEntity);
-                if(islandPos == null) {
+                if (islandPos == null) {
                     throw NO_ISLAND_FOR_UUID.create();
                 }
                 structureWorldState.deleteIsland(playerEntity);
@@ -80,13 +80,13 @@ public class StructureWorldCommand {
             .then(CommandManager.argument("player", EntityArgumentType.player())
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .executes(context -> {
-                        if(isNotStructureWorld(context)) {
+                        if (isNotStructureWorld(context)) {
                             throw INVALID_CHUNK_GENERATOR.create();
                         }
                         ServerPlayerEntity playerEntity = EntityArgumentType.getPlayer(context, "player");
                         StructureWorldState structureWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
                         BlockPos islandPos = structureWorldState.getIsland(playerEntity);
-                        if(islandPos == null) {
+                        if (islandPos == null) {
                             throw NO_ISLAND_FOR_UUID.create();
                         }
                         structureWorldState.deleteIsland(playerEntity);
@@ -99,13 +99,13 @@ public class StructureWorldCommand {
             .literal("teleport")
             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(Mod.CONFIG.getTeleportToPlatformPermissionLevel()))
             .executes(context -> {
-                if(isNotStructureWorld(context)) {
+                if (isNotStructureWorld(context)) {
                     throw INVALID_CHUNK_GENERATOR.create();
                 }
                 ServerPlayerEntity playerEntity = context.getSource().getPlayer();
                 StructureWorldState structureWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
                 BlockPos islandPos = structureWorldState.getIsland(playerEntity);
-                if(islandPos == null) {
+                if (islandPos == null) {
                     throw NO_ISLAND_FOR_UUID.create();
                 }
                 playerEntity.teleport(islandPos.getX(), islandPos.getY(), islandPos.getZ());
@@ -115,13 +115,13 @@ public class StructureWorldCommand {
             .then(CommandManager.argument("player", EntityArgumentType.player())
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .executes(context -> {
-                        if(isNotStructureWorld(context)) {
+                        if (isNotStructureWorld(context)) {
                             throw INVALID_CHUNK_GENERATOR.create();
                         }
                         ServerPlayerEntity playerEntity = EntityArgumentType.getPlayer(context, "player");
                         StructureWorldState structureWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
                         BlockPos islandPos = structureWorldState.getIsland(playerEntity);
-                        if(islandPos == null) {
+                        if (islandPos == null) {
                             throw NO_ISLAND_FOR_UUID.create();
                         }
                         playerEntity.teleport(islandPos.getX(), islandPos.getY(), islandPos.getZ());

@@ -12,7 +12,6 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.FixedBiomeSource;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 
 public class ModClient implements ClientModInitializer {
 
@@ -34,13 +33,13 @@ public class ModClient implements ClientModInitializer {
                 }
             };
 
-            if(structureWorldConfig.isOverridingDefault()) {
+            if (structureWorldConfig.isOverridingDefault()) {
                 GeneratorTypeAccessor.getValues().add(0, generatorType);
                 OVERRIDED_GENERATOR_TYPE = generatorType;
-                Mod.LOGGER.info("Successfully registered "+structure+" generator type. (Overriding default)");
-            }else{
+                Mod.LOGGER.info("Successfully registered " + structure + " generator type. (Overriding default)");
+            } else {
                 GeneratorTypeAccessor.getValues().add(generatorType);
-                Mod.LOGGER.info("Successfully registered "+structure+" generator type.");
+                Mod.LOGGER.info("Successfully registered " + structure + " generator type.");
             }
 
         });

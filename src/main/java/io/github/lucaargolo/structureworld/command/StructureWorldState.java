@@ -27,6 +27,25 @@ public class StructureWorldState extends PersistentState {
         this.dy = 0;
     }
 
+    public static StructureWorldState createFromNbt(NbtCompound tag) {
+        StructureWorldState state = new StructureWorldState();
+        state.playerMap.clear();
+        NbtCompound playerMapTag = tag.getCompound("playerMap");
+        playerMapTag.getKeys().forEach(key -> {
+            try {
+                UUID uuid = UUID.fromString(key);
+                BlockPos pos = BlockPos.fromLong(playerMapTag.getLong(key));
+                state.playerMap.put(uuid, pos);
+            } catch (IllegalArgumentException ignored) {
+            }
+        });
+        state.x = tag.getInt("x");
+        state.y = tag.getInt("y");
+        state.dx = tag.getInt("dx");
+        state.dy = tag.getInt("dy");
+        return state;
+    }
+
     public void deleteIsland(ServerPlayerEntity playerEntity) {
         playerMap.remove(playerEntity.getUuid());
     }
@@ -42,8 +61,7 @@ public class StructureWorldState extends PersistentState {
         int dy = this.dy;
         if (!playerMap.containsKey(playerEntity.getUuid())) {
             ChunkGenerator chunkGenerator = world.getChunkManager().getChunkGenerator();
-            if (chunkGenerator instanceof StructureChunkGenerator) {
-                StructureChunkGenerator structureChunkGenerator = (StructureChunkGenerator) chunkGenerator;
+            if (chunkGenerator instanceof StructureChunkGenerator structureChunkGenerator) {
                 Structure structure = Mod.STRUCTURES.get(structureChunkGenerator.getStructure());
                 BlockPos playerSpawnOffset = structureChunkGenerator.getPlayerSpawnOffset();
                 BlockPos structureOffset = structureChunkGenerator.getStructureOffset();
@@ -51,12 +69,12 @@ public class StructureWorldState extends PersistentState {
                 BlockPos origin = new BlockPos(8, 64, 8);
                 BlockPos island = origin.add(this.x, 0, this.y);
 
-                if ((x == y) || (x < 0 && x == -y) || (x > 0 && x == Mod.CONFIG.getPlatformDistanceRadius()-y)) {
+                if ((x == y) || (x < 0 && x == -y) || (x > 0 && x == Mod.CONFIG.getPlatformDistanceRadius() - y)) {
                     this.dx = -dy;
                     this.dy = dx;
                 }
-                this.x = x+this.dx;
-                this.y = y+this.dy;
+                this.x = x + this.dx;
+                this.y = y + this.dy;
 
                 if (structure != null) {
                     structure.place(world, island.add(structureOffset), island.add(structureOffset), new StructurePlacementData(), world.random, Block.NO_REDRAW);
@@ -73,31 +91,13 @@ public class StructureWorldState extends PersistentState {
     @Override
     public NbtCompound writeNbt(NbtCompound tag) {
         NbtCompound playerMapTag = new NbtCompound();
-        playerMap.forEach( (uuid, blockPos) -> playerMapTag.putLong(uuid.toString(), blockPos.asLong()));
+        playerMap.forEach((uuid, blockPos) -> playerMapTag.putLong(uuid.toString(), blockPos.asLong()));
         tag.put("playerMap", playerMapTag);
         tag.putInt("x", x);
         tag.putInt("y", y);
         tag.putInt("dx", dx);
         tag.putInt("dy", dy);
         return tag;
-    }
-
-    public static StructureWorldState createFromNbt(NbtCompound tag) {
-        StructureWorldState state = new StructureWorldState();
-        state.playerMap.clear();
-        NbtCompound playerMapTag = tag.getCompound("playerMap");
-        playerMapTag.getKeys().forEach( key -> {
-            try {
-                UUID uuid = UUID.fromString(key);
-                BlockPos pos = BlockPos.fromLong(playerMapTag.getLong(key));
-                state.playerMap.put(uuid, pos);
-            }catch (IllegalArgumentException ignored) {}
-        });
-        state.x = tag.getInt("x");
-        state.y = tag.getInt("y");
-        state.dx = tag.getInt("dx");
-        state.dy = tag.getInt("dy");
-        return state;
     }
 
 }

@@ -8,19 +8,42 @@ import java.util.List;
 @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
 public class ModConfig {
 
+    private final List<StructureWorldConfig> structureWorldConfigs = Arrays.asList(
+            new StructureWorldConfig("simple_tree", "minecraft:forest", new int[]{-2, 0, -2}, new int[]{0, 8, 0}),
+            new StructureWorldConfig("classic_skyblock", "minecraft:plains", new int[]{-3, 0, -1}, new int[]{0, 3, 0}),
+            new StructureWorldConfig("stoneblock", "minecraft:plains", new int[]{-5, -2, -5}, new int[]{0, 0, 0}, "minecraft:stone", true, true)
+    );
+    private int createPlatformPermissionLevel = 0;
+    private int teleportToPlatformPermissionLevel = 0;
+    private int platformDistanceRadius = 1000;
+
+    public int getCreatePlatformPermissionLevel() {
+        return createPlatformPermissionLevel;
+    }
+
+    public int getTeleportToPlatformPermissionLevel() {
+        return teleportToPlatformPermissionLevel;
+    }
+
+    public int getPlatformDistanceRadius() {
+        return platformDistanceRadius;
+    }
+
+    public List<StructureWorldConfig> getStructureWorldConfigs() {
+        return structureWorldConfigs;
+    }
+
     public static class StructureWorldConfig {
 
         private final String structureIdentifier;
         private final String biomeIdentifier;
         private final int[] structureOffset;
         private final int[] playerSpawnOffset;
-
+        private final boolean overridingDefault;
         private String fillmentBlockIdentifier;
         private boolean topBedrockEnabled;
         private boolean bottomBedrockEnabled;
         private boolean isBedrockFlat;
-
-        private final boolean overridingDefault;
 
         public StructureWorldConfig(String structureIdentifier, String biomeIdentifier, int[] structureOffset, int[] playerSpawnOffset) {
             this.structureIdentifier = structureIdentifier;
@@ -50,7 +73,9 @@ public class ModConfig {
             return structureIdentifier;
         }
 
-        public String getBiomeIdentifier() { return biomeIdentifier; }
+        public String getBiomeIdentifier() {
+            return biomeIdentifier;
+        }
 
         public BlockPos getStructureOffset() {
             return new BlockPos(structureOffset[0], structureOffset[1], structureOffset[2]);
@@ -75,32 +100,6 @@ public class ModConfig {
         public boolean isBedrockFlat() {
             return isBedrockFlat;
         }
-    }
-
-    private int createPlatformPermissionLevel = 0;
-    private int teleportToPlatformPermissionLevel = 0;
-    private int platformDistanceRadius = 1000;
-
-    private final List<StructureWorldConfig> structureWorldConfigs = Arrays.asList(
-            new StructureWorldConfig("simple_tree", "minecraft:forest", new int[]{-2, 0, -2}, new int[]{0, 8, 0}),
-            new StructureWorldConfig("classic_skyblock", "minecraft:plains", new int[]{-3, 0, -1}, new int[]{0, 3, 0}),
-            new StructureWorldConfig("stoneblock", "minecraft:plains", new int[]{-5, -2, -5}, new int[]{0, 0, 0}, "minecraft:stone", true, true)
-    );
-
-    public int getCreatePlatformPermissionLevel() {
-        return createPlatformPermissionLevel;
-    }
-
-    public int getTeleportToPlatformPermissionLevel() {
-        return teleportToPlatformPermissionLevel;
-    }
-
-    public int getPlatformDistanceRadius() {
-        return platformDistanceRadius;
-    }
-
-    public List<StructureWorldConfig> getStructureWorldConfigs() {
-        return structureWorldConfigs;
     }
 
 }

@@ -1,25 +1,20 @@
 package io.github.lucaargolo.structureworld;
 
-import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.structure.StructureSet;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.dynamic.RegistryOps;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryEntryList;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.*;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.world.ChunkRegion;
+import net.minecraft.world.HeightLimitView;
+import net.minecraft.world.Heightmap;
+import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.biome.source.BiomeSource;
-import net.minecraft.world.biome.source.FixedBiomeSource;
 import net.minecraft.world.biome.source.util.MultiNoiseUtil;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.GenerationStep;
@@ -27,7 +22,6 @@ import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.Blender;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.VerticalBlockSample;
-import net.minecraft.world.gen.random.AbstractRandom;
 import net.minecraft.world.gen.random.ChunkRandom;
 import net.minecraft.world.gen.random.RandomSeed;
 import net.minecraft.world.gen.random.Xoroshiro128PlusPlusRandom;
@@ -41,28 +35,26 @@ import java.util.concurrent.Executor;
 
 public class StructureChunkGenerator extends ChunkGenerator {
 
+    public static final Codec<StructureChunkGenerator> CODEC = RecordCodecBuilder.create((instance) ->
+            instance.group(
+                    RegistryOps.createRegistryCodec(Registry.STRUCTURE_SET_KEY).forGetter((chunkGenerator) -> chunkGenerator.field_37053),
+                    BiomeSource.CODEC.fieldOf("biome_source").forGetter((generator) -> generator.biomeSource),
+                    Codec.STRING.stable().fieldOf("structure").forGetter((generator) -> generator.structure),
+                    BlockPos.CODEC.fieldOf("structureOffset").forGetter((generator) -> generator.structureOffset),
+                    BlockPos.CODEC.fieldOf("playerSpawnOffset").forGetter((generator) -> generator.playerSpawnOffset),
+                    BlockState.CODEC.optionalFieldOf("fillmentBlock", Blocks.AIR.getDefaultState()).stable().forGetter((generator) -> generator.fillmentBlock),
+                    Codec.BOOL.optionalFieldOf("enableTopBedrock", false).stable().forGetter((generator) -> generator.enableTopBedrock),
+                    Codec.BOOL.optionalFieldOf("enableBottomBedrock", false).stable().forGetter((generator) -> generator.enableBottomBedrock),
+                    Codec.BOOL.optionalFieldOf("isBedrockFlat", false).stable().forGetter((generator) -> generator.isBedrockFlat)
+            ).apply(instance, instance.stable(StructureChunkGenerator::new))
+    );
     private final String structure;
     private final BlockPos structureOffset;
     private final BlockPos playerSpawnOffset;
-
     private final BlockState fillmentBlock;
     private final boolean enableTopBedrock;
     private final boolean enableBottomBedrock;
     private final boolean isBedrockFlat;
-
-    public static final Codec<StructureChunkGenerator> CODEC = RecordCodecBuilder.create((instance) ->
-            instance.group(
-                RegistryOps.createRegistryCodec(Registry.STRUCTURE_SET_KEY).forGetter((chunkGenerator) -> chunkGenerator.field_37053),
-                BiomeSource.CODEC.fieldOf("biome_source").forGetter((generator) -> generator.biomeSource),
-                Codec.STRING.stable().fieldOf("structure").forGetter((generator) -> generator.structure),
-                BlockPos.CODEC.fieldOf("structureOffset").forGetter((generator) -> generator.structureOffset),
-                BlockPos.CODEC.fieldOf("playerSpawnOffset").forGetter((generator) -> generator.playerSpawnOffset),
-                BlockState.CODEC.optionalFieldOf("fillmentBlock", Blocks.AIR.getDefaultState()).stable().forGetter((generator) -> generator.fillmentBlock),
-                Codec.BOOL.optionalFieldOf("enableTopBedrock", false).stable().forGetter((generator) -> generator.enableTopBedrock),
-                Codec.BOOL.optionalFieldOf("enableBottomBedrock", false).stable().forGetter((generator) -> generator.enableBottomBedrock),
-                Codec.BOOL.optionalFieldOf("isBedrockFlat", false).stable().forGetter((generator) -> generator.isBedrockFlat)
-            ).apply(instance, instance.stable(StructureChunkGenerator::new))
-    );
 
     public StructureChunkGenerator(Registry<StructureSet> registry, BiomeSource biomeSource, String structure, BlockPos structureOffset, BlockPos playerSpawnOffset, BlockState fillmentBlock, boolean enableTopBedrock, boolean enableBottomBedrock, boolean isBedrockFlat) {
         super(registry, Optional.of(RegistryEntryList.of(Collections.emptyList())), biomeSource);
@@ -78,7 +70,7 @@ public class StructureChunkGenerator extends ChunkGenerator {
     @Override
     public void generateFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor) {
         ChunkRandom chunkRandom = new ChunkRandom(new Xoroshiro128PlusPlusRandom(RandomSeed.getSeed()));
-        Mod.generateStructureFeature(world, this, chunkRandom, chunk.getPos().getBlockPos(0,0,0));
+        Mod.generateStructureFeature(world, this, chunkRandom, chunk.getPos().getBlockPos(0, 0, 0));
     }
 
     public String getStructure() {
@@ -110,20 +102,21 @@ public class StructureChunkGenerator extends ChunkGenerator {
 
     @Override
     public void buildSurface(ChunkRegion region, StructureAccessor structures, Chunk chunk) {
-        if(!fillmentBlock.isAir()) {
+        if (!fillmentBlock.isAir()) {
             int startX = chunk.getPos().getStartX();
             int startZ = chunk.getPos().getStartZ();
 
-            BlockPos.iterate(startX, 0, startZ, startX + 15, getWorldHeight(), startZ + 15).forEach( blockPos -> chunk.setBlockState(blockPos, fillmentBlock, false));
+            BlockPos.iterate(startX, 0, startZ, startX + 15, getWorldHeight(), startZ + 15).forEach(blockPos -> chunk.setBlockState(blockPos, fillmentBlock, false));
         }
-        if(enableTopBedrock || enableBottomBedrock) {
+        if (enableTopBedrock || enableBottomBedrock) {
             ChunkRandom chunkRandom = new ChunkRandom(new Xoroshiro128PlusPlusRandom(RandomSeed.getSeed()));
             buildBedrock(chunk, chunkRandom);
         }
     }
 
     @Override
-    public void populateEntities(ChunkRegion region) { }
+    public void populateEntities(ChunkRegion region) {
+    }
 
     @Override
     public int getWorldHeight() {
@@ -152,11 +145,11 @@ public class StructureChunkGenerator extends ChunkGenerator {
         boolean shouldGenerateTopBedrock = topBedrockY + 4 >= 0 && topBedrockY < this.getWorldHeight() && this.enableTopBedrock;
         boolean shouldGenerateBottomBedrock = bottomBedrockY + 4 >= 0 && bottomBedrockY < this.getWorldHeight() && this.enableBottomBedrock;
         if (shouldGenerateTopBedrock || shouldGenerateBottomBedrock) {
-            BlockPos.iterate(startX, 0, startZ, startX + 15, 0, startZ + 15).forEach( blockPos -> {
+            BlockPos.iterate(startX, 0, startZ, startX + 15, 0, startZ + 15).forEach(blockPos -> {
                 if (shouldGenerateTopBedrock) {
-                    if(isBedrockFlat) {
+                    if (isBedrockFlat) {
                         chunk.setBlockState(mutable.set(blockPos.getX(), topBedrockY, blockPos.getZ()), Blocks.BEDROCK.getDefaultState(), false);
-                    }else {
+                    } else {
                         for (int o = 0; o < 5; ++o) {
                             if (o <= random.nextInt(5)) {
                                 chunk.setBlockState(mutable.set(blockPos.getX(), topBedrockY - o, blockPos.getZ()), Blocks.BEDROCK.getDefaultState(), false);
@@ -164,10 +157,10 @@ public class StructureChunkGenerator extends ChunkGenerator {
                         }
                     }
                 }
-                if(shouldGenerateBottomBedrock) {
-                    if(isBedrockFlat) {
+                if (shouldGenerateBottomBedrock) {
+                    if (isBedrockFlat) {
                         chunk.setBlockState(mutable.set(blockPos.getX(), bottomBedrockY, blockPos.getZ()), Blocks.BEDROCK.getDefaultState(), false);
-                    }else {
+                    } else {
                         for (int o = 4; o >= 0; --o) {
                             if (o <= random.nextInt(5)) {
                                 chunk.setBlockState(mutable.set(blockPos.getX(), bottomBedrockY + o, blockPos.getZ()), Blocks.BEDROCK.getDefaultState(), false);
@@ -200,5 +193,6 @@ public class StructureChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public void carve(ChunkRegion chunkRegion, long seed, BiomeAccess biomeAccess, StructureAccessor structureAccessor, Chunk chunk, GenerationStep.Carver generationStep) { }
+    public void carve(ChunkRegion chunkRegion, long seed, BiomeAccess biomeAccess, StructureAccessor structureAccessor, Chunk chunk, GenerationStep.Carver generationStep) {
+    }
 }

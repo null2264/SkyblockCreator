@@ -35,10 +35,24 @@ public class Mod implements ModInitializer {
     public static final String MOD_ID = "structureworld";
     public static final Logger LOGGER = LogManager.getLogger("Structure World");
     public static final HashMap<String, Structure> STRUCTURES = Maps.newHashMap();
-    public static ModConfig CONFIG;
-
     private static final JsonParser parser = new JsonParser();
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public static ModConfig CONFIG;
+
+    public static void generateStructureFeature(StructureWorldAccess structureWorldAccess, ChunkGenerator chunkGenerator, Random random, BlockPos blockPos) {
+        if (!blockPos.isWithinDistance(BlockPos.ORIGIN, 2) || !(chunkGenerator instanceof StructureChunkGenerator structureChunkGenerator)) {
+            return;
+        }
+
+        Structure structure = Mod.STRUCTURES.get(structureChunkGenerator.getStructure());
+        BlockPos structureOffset = structureChunkGenerator.getStructureOffset();
+
+        BlockPos offsetedPos = blockPos.add(structureOffset);
+
+        if (structure != null) {
+            structure.place(structureWorldAccess, offsetedPos.add(8, 64, 8), offsetedPos.add(8, 64, 8), new StructurePlacementData(), random, Block.NO_REDRAW);
+        }
+    }
 
     @Override
     public void onInitialize() {
@@ -50,25 +64,25 @@ public class Mod implements ModInitializer {
 
         LOGGER.info("Trying to read structures folder...");
         try {
-            if(!structuresFolder.exists()) {
+            if (!structuresFolder.exists()) {
                 LOGGER.info("No structures folder found, creating a new one...");
-                if(structuresFolder.mkdirs()) {
+                if (structuresFolder.mkdirs()) {
                     Path builtinStructuresFolderPath = FabricLoader.getInstance().getModContainer("structureworld").orElseThrow(() -> new Exception("Couldn't find ModContainer")).getPath("structures");
                     List<Path> builtinStructuresPath = Files.walk(builtinStructuresFolderPath).filter(Files::isRegularFile).collect(Collectors.toList());
-                    for(Path builtinStructurePath : builtinStructuresPath) {
+                    for (Path builtinStructurePath : builtinStructuresPath) {
                         InputStream builtinStructureInputStream = Files.newInputStream(builtinStructurePath);
                         File outputFile = new File(structuresFolder, builtinStructurePath.getFileName().toString());
-                        if(outputFile.createNewFile()) {
+                        if (outputFile.createNewFile()) {
                             FileOutputStream structureOutputStream = new FileOutputStream(outputFile);
                             IOUtils.copy(builtinStructureInputStream, structureOutputStream);
                         }
                     }
                     LOGGER.info("Successfully created structures folder.");
-                }else{
+                } else {
                     throw new Exception("Failed while creating structures folder.");
                 }
             }
-            if(structuresFolder.exists()) {
+            if (structuresFolder.exists()) {
                 LOGGER.info("Found structures folder, loading structures...");
                 File[] files = structuresFolder.listFiles(pathname -> pathname.exists() && pathname.isFile() && pathname.getName().endsWith(".nbt"));
                 for (File file : files) {
@@ -82,7 +96,7 @@ public class Mod implements ModInitializer {
                 LOGGER.info("Successfully loaded structures folder with " + STRUCTURES.size() + " structure.");
             }
 
-        }catch (Exception exception) {
+        } catch (Exception exception) {
             LOGGER.error("There was an error creating/loading the structures folder!", exception);
         }
         LOGGER.info("Trying to read config file...");
@@ -94,39 +108,24 @@ public class Mod implements ModInitializer {
                     out.println(json);
                 }
                 CONFIG = new ModConfig();
-                LOGGER.info("Successfully created default config file with "+CONFIG.getStructureWorldConfigs().size()+" custom structure worlds.");
+                LOGGER.info("Successfully created default config file with " + CONFIG.getStructureWorldConfigs().size() + " custom structure worlds.");
             } else {
                 LOGGER.info("A config file was found, loading it..");
                 CONFIG = gson.fromJson(new String(Files.readAllBytes(configFile.toPath())), ModConfig.class);
-                if(CONFIG == null) {
+                if (CONFIG == null) {
                     throw new NullPointerException("The config file was empty.");
-                }else{
-                    LOGGER.info("Successfully loaded config file with "+CONFIG.getStructureWorldConfigs().size()+" custom structure worlds.");
+                } else {
+                    LOGGER.info("Successfully loaded config file with " + CONFIG.getStructureWorldConfigs().size() + " custom structure worlds.");
                 }
             }
-        }catch (Exception exception) {
+        } catch (Exception exception) {
             LOGGER.error("There was an error creating/loading the config file!", exception);
             CONFIG = new ModConfig();
-            LOGGER.warn("Defaulting to original config with "+CONFIG.getStructureWorldConfigs().size()+" custom structure worlds.");
+            LOGGER.warn("Defaulting to original config with " + CONFIG.getStructureWorldConfigs().size() + " custom structure worlds.");
         }
 
         CommandRegistrationCallback.EVENT.register(((dispatcher, dedicated) -> StructureWorldCommand.register(dispatcher)));
 
-    }
-
-    public static void generateStructureFeature(StructureWorldAccess structureWorldAccess, ChunkGenerator chunkGenerator, Random random, BlockPos blockPos) {
-        if(!blockPos.isWithinDistance(BlockPos.ORIGIN, 2) || !(chunkGenerator instanceof StructureChunkGenerator structureChunkGenerator)) {
-            return;
-        }
-
-        Structure structure = Mod.STRUCTURES.get(structureChunkGenerator.getStructure());
-        BlockPos structureOffset = structureChunkGenerator.getStructureOffset();
-
-        BlockPos offsetedPos = blockPos.add(structureOffset);
-
-        if(structure != null) {
-            structure.place(structureWorldAccess, offsetedPos.add(8, 64, 8), offsetedPos.add(8, 64, 8), new StructurePlacementData(), random, Block.NO_REDRAW);
-        }
     }
 
 
