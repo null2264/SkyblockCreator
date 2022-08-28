@@ -38,7 +38,7 @@ configure<JavaPluginConvention> {
     targetCompatibility = JavaVersion.VERSION_16
 }
 
-version = project["mod_version"]
+version = "${project["mod_version"]}+${project["supported_version"]}"
 group = project["maven_group"]
 
 val environment: Map<String, String> = System.getenv()
