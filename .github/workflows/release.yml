@@ -19,5 +19,5 @@ jobs:
         ./gradlew build github curseforge modrinth --stacktrace
       env:
         CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
