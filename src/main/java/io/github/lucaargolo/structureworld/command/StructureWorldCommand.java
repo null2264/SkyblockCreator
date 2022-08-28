@@ -7,6 +7,8 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.github.lucaargolo.structureworld.Mod;
 import io.github.lucaargolo.structureworld.StructureChunkGenerator;
+import io.github.lucaargolo.structureworld.error.InvalidChunkGenerator;
+import io.github.lucaargolo.structureworld.error.NoIslandFound;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -100,33 +102,33 @@ public class StructureWorldCommand {
             .literal("teleport")
             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(Mod.CONFIG.getTeleportToPlatformPermissionLevel()))
             .executes(context -> {
-                if (isNotStructureWorld(context)) {
-                    throw INVALID_CHUNK_GENERATOR.create();
-                }
-                ServerPlayerEntity playerEntity = context.getSource().getPlayer();
                 StructureWorldState structureWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
-                BlockPos islandPos = structureWorldState.getIsland(playerEntity);
-                if (islandPos == null) {
+                ServerPlayerEntity player = context.getSource().getPlayer();
+
+                try {
+                    structureWorldState.teleportToIsland(context.getSource().getWorld(), player);
+                } catch (InvalidChunkGenerator invalidChunk) {
+                    throw INVALID_CHUNK_GENERATOR.create();
+                } catch (NoIslandFound noIsland) {
                     throw NO_ISLAND_FOR_UUID.create();
                 }
-                playerEntity.teleport(islandPos.getX(), islandPos.getY(), islandPos.getZ());
-                context.getSource().sendFeedback(new TranslatableText("commands.structureworld.teleported_to_island", playerEntity.getDisplayName()), false);
+                context.getSource().sendFeedback(new TranslatableText("commands.structureworld.teleported_to_island", player.getDisplayName()), false);
                 return 1;
             })
             .then(CommandManager.argument("player", EntityArgumentType.player())
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .executes(context -> {
-                        if (isNotStructureWorld(context)) {
-                            throw INVALID_CHUNK_GENERATOR.create();
-                        }
-                        ServerPlayerEntity playerEntity = EntityArgumentType.getPlayer(context, "player");
                         StructureWorldState structureWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
-                        BlockPos islandPos = structureWorldState.getIsland(playerEntity);
-                        if (islandPos == null) {
+                        ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
+
+                        try {
+                            structureWorldState.teleportToIsland(context.getSource().getWorld(), player);
+                        } catch (InvalidChunkGenerator invalidChunk) {
+                            throw INVALID_CHUNK_GENERATOR.create();
+                        } catch (NoIslandFound noIsland) {
                             throw NO_ISLAND_FOR_UUID.create();
                         }
-                        playerEntity.teleport(islandPos.getX(), islandPos.getY(), islandPos.getZ());
-                        context.getSource().sendFeedback(new TranslatableText("commands.structureworld.teleported_to_island", playerEntity.getDisplayName()), true);
+                        context.getSource().sendFeedback(new TranslatableText("commands.structureworld.teleported_to_island", player.getDisplayName()), true);
                         return 1;
                     })
             );

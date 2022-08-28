@@ -12,7 +12,6 @@ import net.minecraft.util.registry.RegistryEntryList;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
-import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.biome.source.util.MultiNoiseUtil;
@@ -65,12 +64,6 @@ public class StructureChunkGenerator extends ChunkGenerator {
         this.enableTopBedrock = enableTopBedrock;
         this.enableBottomBedrock = enableBottomBedrock;
         this.isBedrockFlat = isBedrockFlat;
-    }
-
-    @Override
-    public void generateFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor) {
-        ChunkRandom chunkRandom = new ChunkRandom(new Xoroshiro128PlusPlusRandom(RandomSeed.getSeed()));
-        Mod.generateStructureFeature(world, this, chunkRandom, chunk.getPos().getBlockPos(0, 0, 0));
     }
 
     public String getStructure() {
