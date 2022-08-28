@@ -2,11 +2,9 @@ package io.github.lucaargolo.structureworld.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.github.lucaargolo.structureworld.Mod;
-import io.github.lucaargolo.structureworld.StructureChunkGenerator;
 import io.github.lucaargolo.structureworld.error.AlreadyHaveIsland;
 import io.github.lucaargolo.structureworld.error.InvalidChunkGenerator;
 import io.github.lucaargolo.structureworld.error.NoIslandFound;
@@ -14,10 +12,7 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
 
 public class StructureWorldCommand {
     // TODO: Add team support
@@ -137,10 +132,6 @@ public class StructureWorldCommand {
         dispatcher.register(
                 CommandManager.literal("sw").redirect(mainNode)
         );
-    }
-
-    private static boolean isNotStructureWorld(CommandContext<ServerCommandSource> context) {
-        return !(context.getSource().getWorld().getChunkManager().getChunkGenerator() instanceof StructureChunkGenerator);
     }
 
 }
