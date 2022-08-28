@@ -2,6 +2,7 @@ package io.github.lucaargolo.structureworld.command;
 
 import io.github.lucaargolo.structureworld.Mod;
 import io.github.lucaargolo.structureworld.StructureChunkGenerator;
+import io.github.lucaargolo.structureworld.error.AlreadyHaveIsland;
 import io.github.lucaargolo.structureworld.error.InvalidChunkGenerator;
 import io.github.lucaargolo.structureworld.error.NoIslandFound;
 import net.minecraft.block.Block;
@@ -56,8 +57,32 @@ public class StructureWorldState extends PersistentState {
         return !(world.getChunkManager().getChunkGenerator() instanceof StructureChunkGenerator);
     }
 
+    public void createIsland(ServerWorld world, ServerPlayerEntity playerEntity) throws InvalidChunkGenerator, AlreadyHaveIsland {
+        if (isNotStructureWorld(world)) {
+            throw new InvalidChunkGenerator();
+        }
+        BlockPos islandPos = this.getIsland(playerEntity);
+        if (islandPos != null) {
+            throw new AlreadyHaveIsland();
+        }
+        islandPos = this.generateIsland(world, playerEntity);
+        playerEntity.teleport(islandPos.getX(), islandPos.getY(), islandPos.getZ());
+    }
+
     public void deleteIsland(ServerPlayerEntity playerEntity) {
         playerMap.remove(playerEntity.getUuid());
+    }
+
+    public void deleteIsland(ServerWorld world, ServerPlayerEntity playerEntity) throws InvalidChunkGenerator, NoIslandFound {
+        if (isNotStructureWorld(world)) {
+            throw new InvalidChunkGenerator();
+        }
+        BlockPos islandPos = this.getIsland(playerEntity);
+        if (islandPos == null) {
+            throw new NoIslandFound();
+        }
+        this.deleteIsland(playerEntity);
+        this.teleportToIsland(world, playerEntity, Util.NIL_UUID);
     }
 
     public BlockPos getSpawnIsland() {
@@ -121,25 +146,28 @@ public class StructureWorldState extends PersistentState {
     }
 
     public void teleportToIsland(ServerWorld world, ServerPlayerEntity player) throws InvalidChunkGenerator, NoIslandFound {
-        teleportToIsland(world, player, false);
+        teleportToIsland(world, player, player);
     }
 
-    public void teleportToIsland(ServerWorld world, ServerPlayerEntity player, Boolean fallback) throws InvalidChunkGenerator, NoIslandFound {
-        teleportToIsland(world, player, fallback, false);
+    public void teleportToIsland(ServerWorld world, ServerPlayerEntity player, ServerPlayerEntity owner) throws InvalidChunkGenerator, NoIslandFound {
+        teleportToIsland(world, player, owner.getUuid());
     }
 
-    public void teleportToIsland(ServerWorld world, ServerPlayerEntity player, Boolean fallback, Boolean forceTeleport) throws InvalidChunkGenerator, NoIslandFound {
-        if (isNotStructureWorld(world) && !fallback) {
+    public void teleportToIsland(ServerWorld world, ServerPlayerEntity player, UUID uuid) throws InvalidChunkGenerator, NoIslandFound {
+        teleportToIsland(world, player, uuid, false);
+    }
+
+    public void teleportToIsland(ServerWorld world, ServerPlayerEntity player, UUID uuid, Boolean forceTeleport) throws InvalidChunkGenerator, NoIslandFound {
+        if (isNotStructureWorld(world) && !uuid.equals(Util.NIL_UUID)) {
             throw new InvalidChunkGenerator();
         }
-        StructureWorldState structureWorldState = world.getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
-        BlockPos islandPos = structureWorldState.getIsland(player);
+        BlockPos islandPos = this.getIsland(uuid);
         if (islandPos == null) {
-            if (!fallback)
+            if (!uuid.equals(Util.NIL_UUID))
                 throw new NoIslandFound();
             else {
-                BlockPos spawnIsland = structureWorldState.getSpawnIsland();
-                islandPos = spawnIsland != null ? spawnIsland : structureWorldState.generateIsland(world);
+                BlockPos spawnIsland = this.getSpawnIsland();
+                islandPos = spawnIsland != null ? spawnIsland : this.generateIsland(world);
             }
         }
 
