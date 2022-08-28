@@ -2,10 +2,11 @@
   "schemaVersion": 1,
   "id": "structureworld",
   "version": "${version}",
-  "name": "Structure World",
+  "name": "Structure World: Revived",
   "description": "A small mod that lets you generate a void world with a custom structure placed on it.",
   "authors": [
-    "D4rkness_King"
+    "D4rkness_King",
+    "null2264"
   ],
   "contributors": [
     "AlexSa1000"
