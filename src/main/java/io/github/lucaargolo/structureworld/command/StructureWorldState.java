@@ -109,10 +109,8 @@ public class StructureWorldState extends PersistentState {
                     island = origin;
                 }
 
-                if (structure != null) {
-                    if (!(uuid.equals(Util.NIL_UUID) && spawnGenerated))
-                        structure.place(world, island.add(structureOffset), island.add(structureOffset), new StructurePlacementData(), world.random, Block.NO_REDRAW);
-                }
+                if (structure != null && !(uuid.equals(Util.NIL_UUID) && spawnGenerated))
+                    structure.place(world, island.add(structureOffset), island.add(structureOffset), new StructurePlacementData(), world.random, Block.NO_REDRAW);
                 playerMap.put(uuid, island.add(playerSpawnOffset));
             } else {
                 playerMap.put(uuid, BlockPos.ORIGIN);
