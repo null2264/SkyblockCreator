@@ -34,16 +34,18 @@ operator fun Project.get(property: String): String {
 }
 
 configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_16
-    targetCompatibility = JavaVersion.VERSION_16
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 version = "${project["mod_version"]}+${project["supported_version"]}"
 group = project["maven_group"]
 
 val environment: Map<String, String> = System.getenv()
-val releaseName = "${name.split("-").joinToString(" ") { it.capitalize() }} ${(version as String).split("+")[0]}"
-val releaseType = (version as String).split("+")[0].split("-").let { if(it.isNotEmpty()) if(it[1] == "BETA" || it[1] == "ALPHA") it[1] else "ALPHA" else "RELEASE" }
+val versionSplit = (version as String).split("+")
+
+val releaseName = "${versionSplit[0]} (mc${versionSplit[1]})"
+val releaseType = versionSplit[0].split("-").let { if(it.isNotEmpty()) if(it[1] == "BETA" || it[1] == "ALPHA") it[1] else "ALPHA" else "RELEASE" }
 val releaseFile = "${buildDir}/libs/${base.archivesBaseName}-${version}.jar"
 val cfGameVersion = (version as String).split("+")[1].let{ if(it == project["minecraft_version"]) it else "$it-Snapshot"}
 
