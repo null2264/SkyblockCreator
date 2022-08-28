@@ -19,8 +19,9 @@ public class PlayerEntityMixin {
         }
 
         StructureWorldState structureWorldState = world.getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
+        ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
         try {
-            structureWorldState.teleportToIsland(world, (ServerPlayerEntity) (Object) this, Util.NIL_UUID, true);
+            structureWorldState.teleportToIsland(world, player, player.getUuid(), true);
         } catch (Exception ignored) {
         }
     }

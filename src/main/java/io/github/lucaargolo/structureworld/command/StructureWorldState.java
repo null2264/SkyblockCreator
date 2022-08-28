@@ -163,7 +163,7 @@ public class StructureWorldState extends PersistentState {
         }
         BlockPos islandPos = this.getIsland(uuid);
         if (islandPos == null) {
-            if (!uuid.equals(Util.NIL_UUID))
+            if (!uuid.equals(Util.NIL_UUID) && !forceTeleport)
                 throw new NoIslandFound();
             else {
                 BlockPos spawnIsland = this.getSpawnIsland();
