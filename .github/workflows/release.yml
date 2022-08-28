@@ -2,11 +2,9 @@ name: Release
 
 on: [workflow_dispatch]
 
-permissions:
-  contents: write
-
 jobs:
   release:
+    permissions: write-all
 
     runs-on: ubuntu-latest
 
