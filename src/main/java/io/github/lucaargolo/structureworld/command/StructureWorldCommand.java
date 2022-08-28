@@ -77,6 +77,10 @@ public class StructureWorldCommand {
                     throw NO_ISLAND_FOR_UUID.create();
                 }
                 structureWorldState.deleteIsland(playerEntity);
+                try {
+                    structureWorldState.teleportToIsland(context.getSource().getWorld(), playerEntity, true);
+                } catch (InvalidChunkGenerator | NoIslandFound ignored) {
+                }
                 context.getSource().sendFeedback(new TranslatableText("commands.structureworld.deleted_island", playerEntity.getDisplayName()), false);
                 return 1;
             })
@@ -93,6 +97,10 @@ public class StructureWorldCommand {
                             throw NO_ISLAND_FOR_UUID.create();
                         }
                         structureWorldState.deleteIsland(playerEntity);
+                        try {
+                            structureWorldState.teleportToIsland(context.getSource().getWorld(), playerEntity, true);
+                        } catch (InvalidChunkGenerator | NoIslandFound ignored) {
+                        }
                         context.getSource().sendFeedback(new TranslatableText("commands.structureworld.deleted_island", playerEntity.getDisplayName()), true);
                         return 1;
                     })

@@ -22,12 +22,14 @@ public class StructureWorldState extends PersistentState {
 
     private final HashMap<UUID, BlockPos> playerMap = new HashMap<>();
     private int x, y, dx, dy;
+    private boolean spawnGenerated;
 
     public StructureWorldState() {
         this.x = Mod.CONFIG.getPlatformDistanceRadius();
         this.y = 0;
         this.dx = Mod.CONFIG.getPlatformDistanceRadius();
         this.dy = 0;
+        this.spawnGenerated = false;
     }
 
     public static StructureWorldState createFromNbt(NbtCompound tag) {
@@ -46,10 +48,11 @@ public class StructureWorldState extends PersistentState {
         state.y = tag.getInt("y");
         state.dx = tag.getInt("dx");
         state.dy = tag.getInt("dy");
+        state.spawnGenerated = tag.getBoolean("spawnGenerated");
         return state;
     }
 
-    private static boolean isNotStructureWorld(ServerWorld world) {
+    public static boolean isNotStructureWorld(ServerWorld world) {
         return !(world.getChunkManager().getChunkGenerator() instanceof StructureChunkGenerator);
     }
 
@@ -70,7 +73,9 @@ public class StructureWorldState extends PersistentState {
     }
 
     public BlockPos generateIsland(ServerWorld world) {
-        return generateIsland(world, Util.NIL_UUID);
+        BlockPos islandPos = generateIsland(world, Util.NIL_UUID);
+        this.spawnGenerated = true;
+        return islandPos;
     }
 
     public BlockPos generateIsland(ServerWorld world, ServerPlayerEntity playerEntity) {
@@ -90,17 +95,23 @@ public class StructureWorldState extends PersistentState {
                 BlockPos structureOffset = structureChunkGenerator.getStructureOffset();
 
                 BlockPos origin = new BlockPos(8, 64, 8);
-                BlockPos island = uuid.equals(Util.NIL_UUID) ? origin : origin.add(this.x, 0, this.y);
+                BlockPos island;
 
-                if ((x == y) || (x < 0 && x == -y) || (x > 0 && x == Mod.CONFIG.getPlatformDistanceRadius() - y)) {
-                    this.dx = -dy;
-                    this.dy = dx;
+                if (!uuid.equals(Util.NIL_UUID)) {
+                    island = origin.add(this.x, 0, this.y);
+                    if ((x == y) || (x < 0 && x == -y) || (x > 0 && x == Mod.CONFIG.getPlatformDistanceRadius() - y)) {
+                        this.dx = -dy;
+                        this.dy = dx;
+                    }
+                    this.x = x + this.dx;
+                    this.y = y + this.dy;
+                } else {
+                    island = origin;
                 }
-                this.x = x + this.dx;
-                this.y = y + this.dy;
 
                 if (structure != null) {
-                    structure.place(world, island.add(structureOffset), island.add(structureOffset), new StructurePlacementData(), world.random, Block.NO_REDRAW);
+                    if (!(uuid.equals(Util.NIL_UUID) && spawnGenerated))
+                        structure.place(world, island.add(structureOffset), island.add(structureOffset), new StructurePlacementData(), world.random, Block.NO_REDRAW);
                 }
                 playerMap.put(uuid, island.add(playerSpawnOffset));
             } else {
@@ -149,6 +160,7 @@ public class StructureWorldState extends PersistentState {
         tag.putInt("y", y);
         tag.putInt("dx", dx);
         tag.putInt("dy", dy);
+        tag.putBoolean("spawnGenerated", spawnGenerated);
         return tag;
     }
 

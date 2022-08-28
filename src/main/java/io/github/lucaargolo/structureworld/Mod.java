@@ -8,16 +8,11 @@ import io.github.lucaargolo.structureworld.command.StructureWorldCommand;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.structure.Structure;
-import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +22,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Mod implements ModInitializer {
@@ -38,21 +32,6 @@ public class Mod implements ModInitializer {
     private static final JsonParser parser = new JsonParser();
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static ModConfig CONFIG;
-
-    public static void generateStructureFeature(StructureWorldAccess structureWorldAccess, ChunkGenerator chunkGenerator, Random random, BlockPos blockPos) {
-        if (!blockPos.isWithinDistance(BlockPos.ORIGIN, 2) || !(chunkGenerator instanceof StructureChunkGenerator structureChunkGenerator)) {
-            return;
-        }
-
-        Structure structure = Mod.STRUCTURES.get(structureChunkGenerator.getStructure());
-        BlockPos structureOffset = structureChunkGenerator.getStructureOffset();
-
-        BlockPos offsetedPos = blockPos.add(structureOffset);
-
-        if (structure != null) {
-            structure.place(structureWorldAccess, offsetedPos.add(8, 64, 8), offsetedPos.add(8, 64, 8), new StructurePlacementData(), random, Block.NO_REDRAW);
-        }
-    }
 
     @Override
     public void onInitialize() {
