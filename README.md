@@ -20,7 +20,7 @@
 For a complete list of features please check the mods [official page](https://modrinth.com/mod/structure-world-revived)
 
 ## License
-Distributed under the Mozilla Public License 2.0. See `LICENSE` for more information.
+Distributed under the Mozilla Public License 2.0. See [`LICENSE`](./LICENSE) for more information.
 
 ## Build
 If you want to build this yourself, please clone the repository and execute `gradlew build` in the projects folder. 
