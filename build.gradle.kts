@@ -48,7 +48,7 @@ val releaseFile = "${buildDir}/libs/${base.archivesBaseName}-${version}.jar"
 val cfGameVersion = (version as String).split("+")[1].let{ if(it == project["minecraft_version"]) it else "$it-Snapshot"}
 
 fun getChangeLog(): String {
-    return "A changelog can be found at https://github.com/lucaargolo/$name/commits/"
+    return "A changelog can be found at https://github.com/null2264/$name/commits/"
 }
 
 fun getBranch(): String {
