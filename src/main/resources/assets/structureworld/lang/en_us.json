@@ -6,7 +6,7 @@
   "commands.structureworld.deleted_island": "Deleted island for %s",
   "commands.structureworld.teleported_to_island": "Teleported to %s's island",
 
-  "generator.simple_tree": "Simple Tree",
-  "generator.classic_skyblock": "Classic Skyblock",
-  "generator.stoneblock": "Stoneblock"
+  "generator.minecraft.simple_tree": "Simple Tree",
+  "generator.minecraft.classic_skyblock": "Classic Skyblock",
+  "generator.minecraft.stoneblock": "Stoneblock"
 }

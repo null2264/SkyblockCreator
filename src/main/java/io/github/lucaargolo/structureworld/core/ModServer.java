@@ -1,5 +1,6 @@
-package io.github.lucaargolo.structureworld;
+package io.github.lucaargolo.structureworld.core;
 
+import io.github.lucaargolo.structureworld.StructureChunkGenerator;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.dedicated.ServerPropertiesHandler;
@@ -13,6 +14,7 @@ import net.minecraft.world.biome.source.FixedBiomeSource;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.GeneratorOptions;
+import net.minecraft.world.gen.WorldPresets;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 public class ModServer implements DedicatedServerModInitializer {
@@ -34,7 +36,7 @@ public class ModServer implements DedicatedServerModInitializer {
                 if (levelType.equals("structure_" + structure)) {
                     Registry<DimensionType> dimensionTypeRegistry = dynamicRegistryManager.get(Registry.DIMENSION_TYPE_KEY);
                     Registry<Biome> biomeRegistry = dynamicRegistryManager.get(Registry.BIOME_KEY);
-                    Registry<DimensionOptions> simpleRegistry = DimensionType.createDefaultDimensionOptions(dynamicRegistryManager, 0L);
+                    Registry<DimensionOptions> simpleRegistry = WorldPresets.createDefaultOptions(dynamicRegistryManager, 0L).getDimensions();
 
                     BlockState fillmentBlockState = Registry.BLOCK.get(new Identifier(structureWorldConfig.getFillmentBlockIdentifier())).getDefaultState();
                     Registry<StructureSet> structureSetRegistry = dynamicRegistryManager.get(Registry.STRUCTURE_SET_KEY);
@@ -49,15 +51,17 @@ public class ModServer implements DedicatedServerModInitializer {
     @Override
     public void onInitializeServer() {
 
-        Mod.CONFIG.getStructureWorldConfigs().forEach(structureWorldConfig -> {
-            Identifier structureIdentifier = new Identifier(structureWorldConfig.getStructureIdentifier());
+        // TODO: Test server support
 
-            if (structureWorldConfig.isOverridingDefault()) {
-                OVERRIDED_LEVEL_TYPE = "structure_" + structureIdentifier.getPath();
-                Mod.LOGGER.info("Overridden default level-type to " + OVERRIDED_LEVEL_TYPE + " generator type.");
-            }
-
-        });
+        // Mod.CONFIG.getStructureWorldConfigs().forEach(structureWorldConfig -> {
+        //     Identifier structureIdentifier = new Identifier(structureWorldConfig.getStructureIdentifier());
+        //
+        //     if (structureWorldConfig.isOverridingDefault()) {
+        //         OVERRIDED_LEVEL_TYPE = "structure_" + structureIdentifier.getPath();
+        //         Mod.LOGGER.info("Overridden default level-type to " + OVERRIDED_LEVEL_TYPE + " generator type.");
+        //     }
+        //
+        // });
 
     }
 }

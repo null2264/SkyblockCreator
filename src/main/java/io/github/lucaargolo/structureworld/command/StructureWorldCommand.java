@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import io.github.lucaargolo.structureworld.Mod;
+import io.github.lucaargolo.structureworld.core.Mod;
 import io.github.lucaargolo.structureworld.error.AlreadyHaveIsland;
 import io.github.lucaargolo.structureworld.error.InvalidChunkGenerator;
 import io.github.lucaargolo.structureworld.error.NoIslandFound;
@@ -12,20 +12,20 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 public class StructureWorldCommand {
     // TODO: Add team support
 
-    private static final SimpleCommandExceptionType INVALID_CHUNK_GENERATOR = new SimpleCommandExceptionType(new TranslatableText("commands.structureworld.invalid_chunk_generator"));
-    private static final SimpleCommandExceptionType ISLAND_FOR_UUID_ALREADY_EXISTS = new SimpleCommandExceptionType(new TranslatableText("commands.structureworld.island_for_uuid_already_exists"));
-    private static final SimpleCommandExceptionType NO_ISLAND_FOR_UUID = new SimpleCommandExceptionType(new TranslatableText("commands.structureworld.no_island_for_uuid"));
+    private static final SimpleCommandExceptionType INVALID_CHUNK_GENERATOR = new SimpleCommandExceptionType(Text.translatable("commands.structureworld.invalid_chunk_generator"));
+    private static final SimpleCommandExceptionType ISLAND_FOR_UUID_ALREADY_EXISTS = new SimpleCommandExceptionType(Text.translatable("commands.structureworld.island_for_uuid_already_exists"));
+    private static final SimpleCommandExceptionType NO_ISLAND_FOR_UUID = new SimpleCommandExceptionType(Text.translatable("commands.structureworld.no_island_for_uuid"));
 
     private static final LiteralArgumentBuilder<ServerCommandSource> create = CommandManager
             .literal("create")
             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(Mod.CONFIG.getCreatePlatformPermissionLevel()))
             .executes(context -> {
-                ServerPlayerEntity playerEntity = context.getSource().getPlayer();
+                ServerPlayerEntity playerEntity = context.getSource().getPlayerOrThrow();
                 StructureWorldState structureWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
                 try {
                     structureWorldState.createIsland(context.getSource().getWorld(), playerEntity);
@@ -34,7 +34,7 @@ public class StructureWorldCommand {
                 } catch (AlreadyHaveIsland e) {
                     throw ISLAND_FOR_UUID_ALREADY_EXISTS.create();
                 }
-                context.getSource().sendFeedback(new TranslatableText("commands.structureworld.created_island", playerEntity.getDisplayName()), false);
+                context.getSource().sendFeedback(Text.translatable("commands.structureworld.created_island", playerEntity.getDisplayName()), false);
                 return 1;
             })
             .then(CommandManager.argument("player", EntityArgumentType.player())
@@ -49,7 +49,7 @@ public class StructureWorldCommand {
                         } catch (AlreadyHaveIsland e) {
                             throw ISLAND_FOR_UUID_ALREADY_EXISTS.create();
                         }
-                        context.getSource().sendFeedback(new TranslatableText("commands.structureworld.created_island", playerEntity.getDisplayName()), true);
+                        context.getSource().sendFeedback(Text.translatable("commands.structureworld.created_island", playerEntity.getDisplayName()), true);
                         return 1;
                     })
             );
@@ -58,7 +58,7 @@ public class StructureWorldCommand {
             .literal("delete")
             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(Mod.CONFIG.getCreatePlatformPermissionLevel()))
             .executes(context -> {
-                ServerPlayerEntity playerEntity = context.getSource().getPlayer();
+                ServerPlayerEntity playerEntity = context.getSource().getPlayerOrThrow();
                 StructureWorldState structureWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
                 try {
                     structureWorldState.deleteIsland(context.getSource().getWorld(), playerEntity);
@@ -67,7 +67,7 @@ public class StructureWorldCommand {
                 } catch (NoIslandFound e) {
                     throw NO_ISLAND_FOR_UUID.create();
                 }
-                context.getSource().sendFeedback(new TranslatableText("commands.structureworld.deleted_island", playerEntity.getDisplayName()), false);
+                context.getSource().sendFeedback(Text.translatable("commands.structureworld.deleted_island", playerEntity.getDisplayName()), false);
                 return 1;
             })
             .then(CommandManager.argument("player", EntityArgumentType.player())
@@ -82,7 +82,7 @@ public class StructureWorldCommand {
                         } catch (NoIslandFound e) {
                             throw NO_ISLAND_FOR_UUID.create();
                         }
-                        context.getSource().sendFeedback(new TranslatableText("commands.structureworld.deleted_island", playerEntity.getDisplayName()), true);
+                        context.getSource().sendFeedback(Text.translatable("commands.structureworld.deleted_island", playerEntity.getDisplayName()), true);
                         return 1;
                     })
             );
@@ -92,7 +92,7 @@ public class StructureWorldCommand {
             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(Mod.CONFIG.getTeleportToPlatformPermissionLevel()))
             .executes(context -> {
                 StructureWorldState structureWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
-                ServerPlayerEntity player = context.getSource().getPlayer();
+                ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
 
                 try {
                     structureWorldState.teleportToIsland(context.getSource().getWorld(), player);
@@ -101,7 +101,7 @@ public class StructureWorldCommand {
                 } catch (NoIslandFound noIsland) {
                     throw NO_ISLAND_FOR_UUID.create();
                 }
-                context.getSource().sendFeedback(new TranslatableText("commands.structureworld.teleported_to_island", player.getDisplayName()), false);
+                context.getSource().sendFeedback(Text.translatable("commands.structureworld.teleported_to_island", player.getDisplayName()), false);
                 return 1;
             })
             .then(CommandManager.argument("player", EntityArgumentType.player())
@@ -111,13 +111,13 @@ public class StructureWorldCommand {
                         ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
 
                         try {
-                            structureWorldState.teleportToIsland(context.getSource().getWorld(), context.getSource().getPlayer(), player);
+                            structureWorldState.teleportToIsland(context.getSource().getWorld(), context.getSource().getPlayerOrThrow(), player);
                         } catch (InvalidChunkGenerator invalidChunk) {
                             throw INVALID_CHUNK_GENERATOR.create();
                         } catch (NoIslandFound noIsland) {
                             throw NO_ISLAND_FOR_UUID.create();
                         }
-                        context.getSource().sendFeedback(new TranslatableText("commands.structureworld.teleported_to_island", player.getDisplayName()), true);
+                        context.getSource().sendFeedback(Text.translatable("commands.structureworld.teleported_to_island", player.getDisplayName()), true);
                         return 1;
                     })
             );

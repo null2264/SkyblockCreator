@@ -7,8 +7,8 @@
     "PlayerEntityMixin"
   ],
   "client": [
-    "CreateWorldScreenMixin",
-    "GeneratorTypeAccessor"
+    "MoreOptionsMixin",
+    "WorldPresetsMixin"
   ],
   "server": [
     "GeneratorOptionsMixin"
