@@ -1,7 +1,6 @@
 package io.github.lucaargolo.structureworld.core;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraft.world.gen.WorldPresets;
 
 public class ModClient implements ClientModInitializer {
 

@@ -11,7 +11,7 @@
     "WorldPresetsMixin"
   ],
   "server": [
-    "GeneratorOptionsMixin"
+    "ServerPropertiesMixin"
   ],
   "injectors": {
     "defaultRequire": 1

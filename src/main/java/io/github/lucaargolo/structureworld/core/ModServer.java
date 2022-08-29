@@ -51,17 +51,15 @@ public class ModServer implements DedicatedServerModInitializer {
     @Override
     public void onInitializeServer() {
 
-        // TODO: Test server support
+        Mod.CONFIG.getStructureWorldConfigs().forEach(structureWorldConfig -> {
+            Identifier structureIdentifier = new Identifier(structureWorldConfig.getStructureIdentifier());
 
-        // Mod.CONFIG.getStructureWorldConfigs().forEach(structureWorldConfig -> {
-        //     Identifier structureIdentifier = new Identifier(structureWorldConfig.getStructureIdentifier());
-        //
-        //     if (structureWorldConfig.isOverridingDefault()) {
-        //         OVERRIDED_LEVEL_TYPE = "structure_" + structureIdentifier.getPath();
-        //         Mod.LOGGER.info("Overridden default level-type to " + OVERRIDED_LEVEL_TYPE + " generator type.");
-        //     }
-        //
-        // });
+            if (structureWorldConfig.isOverridingDefault()) {
+                OVERRIDED_LEVEL_TYPE = "structure_" + structureIdentifier.getPath();
+                Mod.LOGGER.info("Overridden default level-type to " + OVERRIDED_LEVEL_TYPE + " generator type.");
+            }
+
+        });
 
     }
 }
