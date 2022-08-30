@@ -71,7 +71,7 @@ loom {
 }
 
 repositories {
-    maven("https://maven.nucleoid.xyz")
+    maven("https://jitpack.io")
     maven {
         name = "Fabric"
         url = uri("https://maven.fabricmc.net/")
@@ -82,11 +82,6 @@ repositories {
 dependencies {
     minecraft("com.mojang:minecraft:${project["minecraft_version"]}")
     mappings("net.fabricmc:yarn:${project["yarn_mappings"]}:v2")
-
-    "fr.catcore:server-translations-api:${project["server_translation"]}".apply {
-        include(this)
-        modImplementation(this)
-    }
 
     modImplementation("net.fabricmc:fabric-loader:${project["loader_version"]}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project["fabric_version"]}")
