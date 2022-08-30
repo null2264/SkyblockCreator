@@ -7,8 +7,7 @@
     "PlayerEntityMixin"
   ],
   "client": [
-    "MoreOptionsMixin",
-    "WorldPresetsMixin"
+    "MoreOptionsMixin"
   ],
   "server": [
     "ServerPropertiesMixin"

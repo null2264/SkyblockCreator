@@ -1,8 +1,12 @@
 package io.github.lucaargolo.structureworld.core;
 
 import com.google.common.collect.Maps;
-import io.github.lucaargolo.structureworld.StructureChunkGenerator;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
 import io.github.lucaargolo.structureworld.command.StructureWorldCommand;
+import io.github.lucaargolo.structureworld.worldgen.StructureChunkGenerator;
+import io.github.lucaargolo.structureworld.worldgen.StructureWorldPreset;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
@@ -30,19 +34,21 @@ public class Mod implements ModInitializer {
     public static final String MOD_ID = "structureworld";
     public static final Logger LOGGER = LogManager.getLogger("Structure World");
     public static final HashMap<String, StructureTemplate> STRUCTURES = Maps.newHashMap();
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static ModConfig CONFIG;
-    public static List<RegistryKey<WorldPreset>> TO_BE_DISPLAYED = null;
+    public static List<RegistryKey<WorldPreset>> TO_BE_DISPLAYED = List.of();
     public static String OVERRIDED_LEVEL_TYPE = null;
     public static Path configPath = Path.of(FabricLoader.getInstance().getConfigDir() + File.separator + "structureworld");
 
     public static RegistryKey<WorldPreset> registryKeyOf(String id) {
-        return RegistryKey.of(Registry.WORLD_PRESET_KEY, new Identifier(id));
+        return RegistryKey.of(Registry.WORLD_PRESET_KEY, new Identifier(MOD_ID, id));
     }
 
     @Override
     public void onInitialize() {
         Registry.register(Registry.CHUNK_GENERATOR, new Identifier(MOD_ID, "structure_chunk_generator"), StructureChunkGenerator.CODEC);
         File structuresFolder = new File(configPath + File.separator + "structures");
+        File configFile = new File(Mod.configPath + File.separator + "structureworld.json");
 
         LOGGER.info("Trying to read structures folder...");
         try {
@@ -81,6 +87,34 @@ public class Mod implements ModInitializer {
         } catch (Exception exception) {
             LOGGER.error("There was an error creating/loading the structures folder!", exception);
         }
+
+        LOGGER.info("Trying to read config file...");
+        try {
+            if (configFile.createNewFile()) {
+                LOGGER.info("No config file found, creating a new one...");
+                String json = gson.toJson(JsonParser.parseString(gson.toJson(new ModConfig())));
+                try (PrintWriter out = new PrintWriter(configFile)) {
+                    out.println(json);
+                }
+                CONFIG = new ModConfig();
+                LOGGER.info("Successfully created default config file with " + CONFIG.getStructureWorldConfigs().size() + " custom structure worlds.");
+            } else {
+                LOGGER.info("A config file was found, loading it..");
+                CONFIG = gson.fromJson(new String(Files.readAllBytes(configFile.toPath())), ModConfig.class);
+                if (CONFIG == null) {
+                    throw new NullPointerException("The config file was empty.");
+                } else {
+                    LOGGER.info("Successfully loaded config file with " + CONFIG.getStructureWorldConfigs().size() + " custom structure worlds.");
+                }
+            }
+        } catch (Exception exception) {
+            LOGGER.error("There was an error creating/loading the config file!", exception);
+            CONFIG = new ModConfig();
+            LOGGER.warn("Defaulting to original config with " + CONFIG.getStructureWorldConfigs().size() + " custom structure worlds.");
+        }
+
+        LOGGER.info("Trying to register structures to world presets...");
+        StructureWorldPreset.register();
 
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, env) -> StructureWorldCommand.register(dispatcher)));
 

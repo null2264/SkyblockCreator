@@ -1,39 +1,29 @@
 package io.github.lucaargolo.structureworld.mixin;
 
-import io.github.lucaargolo.structureworld.core.ModServer;
+import io.github.lucaargolo.structureworld.core.Mod;
 import net.minecraft.server.dedicated.ServerPropertiesHandler;
-import net.minecraft.util.registry.DynamicRegistryManager;
-import net.minecraft.world.gen.GeneratorOptions;
-import org.spongepowered.asm.mixin.Final;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ServerPropertiesHandler.WorldGenProperties.class)
 public abstract class ServerPropertiesMixin {
-
-    @Shadow
-    @Final
-    private String levelType;
-
-    @Shadow
-    public abstract String levelSeed();
-
-    @Inject(
+    @Redirect(
             method = "createGeneratorOptions(Lnet/minecraft/util/registry/DynamicRegistryManager;)Lnet/minecraft/world/gen/GeneratorOptions;",
-            at = @At("HEAD"),
-            cancellable = true
+            at = @At(value = "FIELD", target = "Lnet/minecraft/server/dedicated/ServerPropertiesHandler$WorldGenProperties;levelType:Ljava/lang/String;", opcode = Opcodes.GETFIELD)
     )
-    public void interceptGenerator(DynamicRegistryManager dynamicRegistryManager, CallbackInfoReturnable<GeneratorOptions> cir) {
-        ModServer.fromPropertiesHook(dynamicRegistryManager, (ServerPropertiesHandler.WorldGenProperties) (Object) this, cir);
-    }
+    public String handleLevelType(ServerPropertiesHandler.WorldGenProperties instance) {
+        String currentType = instance.levelType();
+        if (currentType.equals("default") && Mod.OVERRIDED_LEVEL_TYPE != null)
+            return Mod.OVERRIDED_LEVEL_TYPE;
 
-    @Inject(at = @At(value = "HEAD"), method = "levelType()Ljava/lang/String;", cancellable = true)
-    private void onDefaultLevelType(CallbackInfoReturnable<String> cir) {
-        if (this.levelSeed().equals("default") && ModServer.OVERRIDED_LEVEL_TYPE != null) {
-            cir.setReturnValue(ModServer.OVERRIDED_LEVEL_TYPE);
+        // Backwards compat
+        if (currentType.startsWith("structure_")) {
+            String newType = currentType.replace("structure_", Mod.MOD_ID + ":");
+            Mod.LOGGER.warn("The usage of \"structure_\" is deprecated in version 1.2.4, please use \"structureworld:\" instead! (" + newType + ")");
+            return newType;
         }
+        return currentType;
     }
 }

@@ -1,5 +1,5 @@
 {
-  "generator.minecraft.simple_tree": "Simple Tree",
-  "generator.minecraft.classic_skyblock": "Classic Skyblock",
-  "generator.minecraft.stoneblock": "Stoneblock"
+  "generator.structureworld.simple_tree": "Simple Tree",
+  "generator.structureworld.classic_skyblock": "Classic Skyblock",
+  "generator.structureworld.stoneblock": "Stoneblock"
 }

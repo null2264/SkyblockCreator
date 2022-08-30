@@ -1,10 +1,10 @@
 package io.github.lucaargolo.structureworld.command;
 
-import io.github.lucaargolo.structureworld.StructureChunkGenerator;
 import io.github.lucaargolo.structureworld.core.Mod;
 import io.github.lucaargolo.structureworld.error.AlreadyHaveIsland;
 import io.github.lucaargolo.structureworld.error.InvalidChunkGenerator;
 import io.github.lucaargolo.structureworld.error.NoIslandFound;
+import io.github.lucaargolo.structureworld.worldgen.StructureChunkGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;

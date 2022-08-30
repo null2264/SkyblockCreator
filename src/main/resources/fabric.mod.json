@@ -21,15 +21,10 @@
   "environment": "*",
   "accessWidener": "structureworld.accesswidener",
   "entrypoints": {
-    "preLaunch": [
-      "io.github.lucaargolo.structureworld.core.ModPreLaunch"
-    ],
     "main": [
       "io.github.lucaargolo.structureworld.core.Mod"
     ],
-    "client": [
-      "io.github.lucaargolo.structureworld.core.ModClient"
-    ],
+    "client": [],
     "server": [
       "io.github.lucaargolo.structureworld.core.ModServer"
     ]

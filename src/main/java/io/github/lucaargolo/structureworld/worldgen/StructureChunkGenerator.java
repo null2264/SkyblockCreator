@@ -1,4 +1,4 @@
-package io.github.lucaargolo.structureworld;
+package io.github.lucaargolo.structureworld.worldgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
