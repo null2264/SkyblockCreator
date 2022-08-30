@@ -1,4 +1,4 @@
-<p align="center"><img src="https://i.imgur.com/IMf8ydf.png" width="128" height="128"></p>
+<p align="center"><img src="https://i.imgur.com/NiqXaW2.png" width="250" height="250"></p>
 <h3 align="center">Structure World: Revived</h3>
 
 <p align="center">
