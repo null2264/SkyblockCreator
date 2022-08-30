@@ -3,13 +3,11 @@ package io.github.lucaargolo.structureworld.core;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
-import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 
 import java.io.File;
 import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.nio.file.Path;
 
 import static io.github.lucaargolo.structureworld.core.Mod.CONFIG;
 import static io.github.lucaargolo.structureworld.core.Mod.LOGGER;
@@ -19,11 +17,16 @@ public class ModPreLaunch implements PreLaunchEntrypoint {
 
     @Override
     public void onPreLaunch() {
-        Path configPath = FabricLoader.getInstance().getConfigDir();
-        File configFile = new File(configPath + File.separator + "structureworld" + File.separator + "structureworld.json");
+        File configFolder = Mod.configPath.toFile();
+        File configFile = new File(Mod.configPath + File.separator + "structureworld.json");
 
         LOGGER.info("Trying to read config file...");
         try {
+            if (!configFolder.exists()) {
+                LOGGER.info("No config folder found, creating a new one...");
+                if (!configFolder.mkdirs())
+                    throw new Exception("Failed while creating config folder.");
+            }
             if (configFile.createNewFile()) {
                 LOGGER.info("No config file found, creating a new one...");
                 String json = gson.toJson(JsonParser.parseString(gson.toJson(new ModConfig())));

@@ -33,6 +33,7 @@ public class Mod implements ModInitializer {
     public static ModConfig CONFIG;
     public static List<RegistryKey<WorldPreset>> TO_BE_DISPLAYED = null;
     public static String OVERRIDED_LEVEL_TYPE = null;
+    public static Path configPath = Path.of(FabricLoader.getInstance().getConfigDir() + File.separator + "structureworld");
 
     public static RegistryKey<WorldPreset> registryKeyOf(String id) {
         return RegistryKey.of(Registry.WORLD_PRESET_KEY, new Identifier(id));
@@ -41,8 +42,7 @@ public class Mod implements ModInitializer {
     @Override
     public void onInitialize() {
         Registry.register(Registry.CHUNK_GENERATOR, new Identifier(MOD_ID, "structure_chunk_generator"), StructureChunkGenerator.CODEC);
-        Path configPath = FabricLoader.getInstance().getConfigDir();
-        File structuresFolder = new File(configPath + File.separator + "structureworld" + File.separator + "structures");
+        File structuresFolder = new File(configPath + File.separator + "structures");
 
         LOGGER.info("Trying to read structures folder...");
         try {
