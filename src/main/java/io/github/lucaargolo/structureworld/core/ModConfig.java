@@ -1,4 +1,4 @@
-package io.github.lucaargolo.structureworld;
+package io.github.lucaargolo.structureworld.core;
 
 import net.minecraft.util.math.BlockPos;
 

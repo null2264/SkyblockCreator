@@ -1,5 +1,7 @@
-package io.github.lucaargolo.structureworld;
+package io.github.lucaargolo.structureworld.core;
 
+import io.github.lucaargolo.structureworld.Mod;
+import io.github.lucaargolo.structureworld.worldgen.StructureChunkGenerator;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.dedicated.ServerPropertiesHandler;
@@ -20,18 +22,16 @@ public class ModServer implements DedicatedServerModInitializer {
     public static String OVERRIDED_LEVEL_TYPE = null;
 
     public static void fromPropertiesHook(DynamicRegistryManager dynamicRegistryManager, ServerPropertiesHandler.WorldGenProperties properties, CallbackInfoReturnable<GeneratorOptions> info) {
-        String levelType;
-        if (properties.levelType() == null && OVERRIDED_LEVEL_TYPE != null) {
-            levelType = OVERRIDED_LEVEL_TYPE;
-        } else {
-            levelType = properties.levelType();
-        }
-        if (levelType.startsWith("structure_")) {
+        String levelType = (properties.levelType() == null && OVERRIDED_LEVEL_TYPE != null)
+                ? OVERRIDED_LEVEL_TYPE
+                : properties.levelType();
+
+        if (levelType.startsWith(Mod.MOD_ID + ":")) {
             Mod.CONFIG.getStructureWorldConfigs().forEach(structureWorldConfig -> {
                 String structure = structureWorldConfig.getStructureIdentifier();
                 RegistryKey<Biome> biomeKey = RegistryKey.of(Registry.BIOME_KEY, new Identifier(structureWorldConfig.getBiomeIdentifier()));
 
-                if (levelType.equals("structure_" + structure)) {
+                if (levelType.equals(Mod.MOD_ID + ":" + structure)) {
                     Registry<DimensionType> dimensionTypeRegistry = dynamicRegistryManager.get(Registry.DIMENSION_TYPE_KEY);
                     Registry<Biome> biomeRegistry = dynamicRegistryManager.get(Registry.BIOME_KEY);
                     Registry<DimensionOptions> simpleRegistry = DimensionType.createDefaultDimensionOptions(dynamicRegistryManager, 0L);
@@ -50,10 +50,10 @@ public class ModServer implements DedicatedServerModInitializer {
     public void onInitializeServer() {
 
         Mod.CONFIG.getStructureWorldConfigs().forEach(structureWorldConfig -> {
-            Identifier structureIdentifier = new Identifier(structureWorldConfig.getStructureIdentifier());
+            Identifier structureIdentifier = new Identifier(Mod.MOD_ID, structureWorldConfig.getStructureIdentifier());
 
             if (structureWorldConfig.isOverridingDefault()) {
-                OVERRIDED_LEVEL_TYPE = "structure_" + structureIdentifier.getPath();
+                OVERRIDED_LEVEL_TYPE = structureIdentifier.getPath();
                 Mod.LOGGER.info("Overridden default level-type to " + OVERRIDED_LEVEL_TYPE + " generator type.");
             }
 

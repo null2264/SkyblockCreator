@@ -1,7 +1,7 @@
 package io.github.lucaargolo.structureworld.command;
 
 import io.github.lucaargolo.structureworld.Mod;
-import io.github.lucaargolo.structureworld.StructureChunkGenerator;
+import io.github.lucaargolo.structureworld.worldgen.StructureChunkGenerator;
 import io.github.lucaargolo.structureworld.error.AlreadyHaveIsland;
 import io.github.lucaargolo.structureworld.error.InvalidChunkGenerator;
 import io.github.lucaargolo.structureworld.error.NoIslandFound;

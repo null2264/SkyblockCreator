@@ -25,10 +25,10 @@
       "io.github.lucaargolo.structureworld.Mod"
     ],
     "client": [
-      "io.github.lucaargolo.structureworld.ModClient"
+      "io.github.lucaargolo.structureworld.core.ModClient"
     ],
     "server": [
-      "io.github.lucaargolo.structureworld.ModServer"
+      "io.github.lucaargolo.structureworld.core.ModServer"
     ]
   },
   "mixins": [

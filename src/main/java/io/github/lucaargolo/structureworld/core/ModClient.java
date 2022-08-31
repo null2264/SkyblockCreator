@@ -1,6 +1,9 @@
-package io.github.lucaargolo.structureworld;
+package io.github.lucaargolo.structureworld.core;
 
+import io.github.lucaargolo.structureworld.Mod;
+import io.github.lucaargolo.structureworld.worldgen.StructureChunkGenerator;
 import io.github.lucaargolo.structureworld.mixin.GeneratorTypeAccessor;
+import io.github.lucaargolo.structureworld.worldgen.StructureGeneratorType;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.world.GeneratorType;
@@ -22,16 +25,7 @@ public class ModClient implements ClientModInitializer {
 
         Mod.CONFIG.getStructureWorldConfigs().forEach(structureWorldConfig -> {
             String structure = structureWorldConfig.getStructureIdentifier();
-            RegistryKey<Biome> biomeKey = RegistryKey.of(Registry.BIOME_KEY, new Identifier(structureWorldConfig.getBiomeIdentifier()));
-            GeneratorType generatorType = new GeneratorType(structure) {
-                @Override
-                protected ChunkGenerator getChunkGenerator(DynamicRegistryManager registryManager, long seed) {
-                    Registry<StructureSet> structureSetRegistry = registryManager.get(Registry.STRUCTURE_SET_KEY);
-                    Registry<Biome> biomeRegistry = registryManager.get(Registry.BIOME_KEY);
-                    BlockState fillmentBlockState = Registry.BLOCK.get(new Identifier(structureWorldConfig.getFillmentBlockIdentifier())).getDefaultState();
-                    return new StructureChunkGenerator(structureSetRegistry, new FixedBiomeSource(biomeRegistry.getOrCreateEntry(biomeKey)), structure, structureWorldConfig.getStructureOffset(), structureWorldConfig.getPlayerSpawnOffset(), fillmentBlockState, structureWorldConfig.isTopBedrockEnabled(), structureWorldConfig.isBottomBedrockEnabled(), structureWorldConfig.isBedrockFlat());
-                }
-            };
+            GeneratorType generatorType = new StructureGeneratorType(structureWorldConfig);
 
             if (structureWorldConfig.isOverridingDefault()) {
                 GeneratorTypeAccessor.getValues().add(0, generatorType);

@@ -1,6 +1,6 @@
 package io.github.lucaargolo.structureworld.mixin;
 
-import io.github.lucaargolo.structureworld.ModClient;
+import io.github.lucaargolo.structureworld.core.ModClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
 import net.minecraft.client.gui.screen.world.MoreOptionsDialog;
@@ -21,9 +21,9 @@ public class CreateWorldScreenMixin {
     @Inject(at = @At("HEAD"), method = "create", cancellable = true)
     private static void onCreate(Screen parent, CallbackInfoReturnable<CreateWorldScreen> callbackInfoReturnable) {
         if (ModClient.OVERRIDED_GENERATOR_TYPE != null) {
-            DynamicRegistryManager dynamicRegistryManager = DynamicRegistryManager.createAndLoad();
+            DynamicRegistryManager.Mutable dynamicRegistryManager = DynamicRegistryManager.createAndLoad();
             GeneratorOptions hackedGeneratorOptions = ModClient.OVERRIDED_GENERATOR_TYPE.createDefaultOptions(dynamicRegistryManager, 0L, true, false);
-            MoreOptionsDialog hackedOptionsDialog = new MoreOptionsDialog((DynamicRegistryManager.Immutable) dynamicRegistryManager, hackedGeneratorOptions, Optional.of(ModClient.OVERRIDED_GENERATOR_TYPE), OptionalLong.empty());
+            MoreOptionsDialog hackedOptionsDialog = new MoreOptionsDialog(dynamicRegistryManager.toImmutable(), hackedGeneratorOptions, Optional.of(ModClient.OVERRIDED_GENERATOR_TYPE), OptionalLong.empty());
             CreateWorldScreen hackedWorldScreen = new CreateWorldScreen(parent, DataPackSettings.SAFE_MODE, hackedOptionsDialog);
             callbackInfoReturnable.setReturnValue(hackedWorldScreen);
         }
