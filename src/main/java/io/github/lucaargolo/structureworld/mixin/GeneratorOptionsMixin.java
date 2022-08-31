@@ -25,8 +25,11 @@ public abstract class GeneratorOptionsMixin {
             return ModServer.OVERRIDED_LEVEL_TYPE;
 
         // Backwards compat
-        if (instance.levelType().startsWith("structure_"))
-            return instance.levelType().replace("structure_", Mod.MOD_ID + ":");
+        if (instance.levelType().startsWith("structure_")) {
+            String newType = instance.levelType().replace("structure_", Mod.MOD_ID + ":");
+            Mod.LOGGER.warn("The usage of \"structure_\" is deprecated in version 1.2.4, please use \"structureworld:\" instead! (" + newType + ")");
+            return newType;
+        }
 
         return instance.levelType();
     }
