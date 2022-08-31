@@ -2,7 +2,6 @@ package io.github.lucaargolo.structureworld.worldgen;
 
 import io.github.lucaargolo.structureworld.Mod;
 import io.github.lucaargolo.structureworld.core.ModConfig;
-import io.github.lucaargolo.structureworld.mixin.GeneratorTypeAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
