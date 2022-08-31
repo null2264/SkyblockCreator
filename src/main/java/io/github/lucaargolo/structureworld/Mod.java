@@ -24,7 +24,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Mod implements ModInitializer {
 
@@ -32,7 +31,6 @@ public class Mod implements ModInitializer {
     public static final String MOD_ID = "structureworld";
     public static final Logger LOGGER = LogManager.getLogger("Structure World");
     public static final HashMap<String, Structure> STRUCTURES = Maps.newHashMap();
-    private static final JsonParser parser = new JsonParser();
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static ModConfig CONFIG;
 
@@ -49,8 +47,8 @@ public class Mod implements ModInitializer {
             if (!structuresFolder.exists()) {
                 LOGGER.info("No structures folder found, creating a new one...");
                 if (structuresFolder.mkdirs()) {
-                    Path builtinStructuresFolderPath = FabricLoader.getInstance().getModContainer("structureworld").orElseThrow(() -> new Exception("Couldn't find ModContainer")).getPath("structures");
-                    List<Path> builtinStructuresPath = Files.walk(builtinStructuresFolderPath).filter(Files::isRegularFile).collect(Collectors.toList());
+                    Path builtinStructuresFolderPath = FabricLoader.getInstance().getModContainer("structureworld").orElseThrow(() -> new Exception("Couldn't find ModContainer")).findPath("structures").orElseThrow();
+                    List<Path> builtinStructuresPath = Files.walk(builtinStructuresFolderPath).filter(Files::isRegularFile).toList();
                     for (Path builtinStructurePath : builtinStructuresPath) {
                         InputStream builtinStructureInputStream = Files.newInputStream(builtinStructurePath);
                         File outputFile = new File(structuresFolder, builtinStructurePath.getFileName().toString());
@@ -85,7 +83,7 @@ public class Mod implements ModInitializer {
         try {
             if (configFile.createNewFile()) {
                 LOGGER.info("No config file found, creating a new one...");
-                String json = gson.toJson(parser.parse(gson.toJson(new ModConfig())));
+                String json = gson.toJson(JsonParser.parseString(gson.toJson(new ModConfig())));
                 try (PrintWriter out = new PrintWriter(configFile)) {
                     out.println(json);
                 }
