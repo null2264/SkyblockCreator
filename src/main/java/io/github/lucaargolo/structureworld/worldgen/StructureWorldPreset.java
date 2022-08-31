@@ -1,6 +1,6 @@
 package io.github.lucaargolo.structureworld.worldgen;
 
-import io.github.lucaargolo.structureworld.core.Mod;
+import io.github.lucaargolo.structureworld.Mod;
 import io.github.lucaargolo.structureworld.core.ModConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Identifier;

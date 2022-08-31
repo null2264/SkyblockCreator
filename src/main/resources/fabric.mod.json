@@ -22,7 +22,7 @@
   "accessWidener": "structureworld.accesswidener",
   "entrypoints": {
     "main": [
-      "io.github.lucaargolo.structureworld.core.Mod"
+      "io.github.lucaargolo.structureworld.Mod"
     ],
     "client": [],
     "server": [

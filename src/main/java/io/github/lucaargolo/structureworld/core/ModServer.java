@@ -1,9 +1,10 @@
 package io.github.lucaargolo.structureworld.core;
 
+import io.github.lucaargolo.structureworld.Mod;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.minecraft.util.Identifier;
 
-import static io.github.lucaargolo.structureworld.core.Mod.OVERRIDED_LEVEL_TYPE;
+import static io.github.lucaargolo.structureworld.Mod.OVERRIDED_LEVEL_TYPE;
 
 public class ModServer implements DedicatedServerModInitializer {
 

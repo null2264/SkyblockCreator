@@ -1,6 +1,6 @@
 package io.github.lucaargolo.structureworld.mixin;
 
-import io.github.lucaargolo.structureworld.core.Mod;
+import io.github.lucaargolo.structureworld.Mod;
 import net.minecraft.client.gui.screen.world.MoreOptionsDialog;
 import net.minecraft.client.world.GeneratorOptionsHolder;
 import net.minecraft.tag.TagKey;

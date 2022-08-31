@@ -1,10 +1,11 @@
-package io.github.lucaargolo.structureworld.core;
+package io.github.lucaargolo.structureworld;
 
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import io.github.lucaargolo.structureworld.command.StructureWorldCommand;
+import io.github.lucaargolo.structureworld.core.ModConfig;
 import io.github.lucaargolo.structureworld.worldgen.StructureChunkGenerator;
 import io.github.lucaargolo.structureworld.worldgen.StructureWorldPreset;
 import net.fabricmc.api.ModInitializer;
