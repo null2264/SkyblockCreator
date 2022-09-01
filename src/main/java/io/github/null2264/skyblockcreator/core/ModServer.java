@@ -1,10 +1,10 @@
-package io.github.lucaargolo.structureworld.core;
+package io.github.null2264.skyblockcreator.core;
 
-import io.github.lucaargolo.structureworld.Mod;
+import io.github.null2264.skyblockcreator.Mod;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.minecraft.util.Identifier;
 
-import static io.github.lucaargolo.structureworld.Mod.OVERRIDED_LEVEL_TYPE;
+import static io.github.null2264.skyblockcreator.Mod.OVERRIDED_LEVEL_TYPE;
 
 public class ModServer implements DedicatedServerModInitializer {
 

@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "id": "structureworld",
+  "id": "skyblockcreator",
   "version": "${version}",
-  "name": "Structure World: Revived",
-  "description": "A small mod that lets you generate a void world with a custom structure placed on it.",
+  "name": "Skyblock Creator",
+  "description": "A fabric mod that lets you add skyblock-like world type(s)",
   "authors": [
-    "D4rkness_King",
-    "null2264"
+    "null2264",
+    "D4rkness_King"
   ],
   "contributors": [
     "AlexSa1000"
@@ -19,18 +19,18 @@
   "license": "MPL-2.0",
   "icon": "assets/structureworld/icon.png",
   "environment": "*",
-  "accessWidener": "structureworld.accesswidener",
+  "accessWidener": "skyblockcreator.accesswidener",
   "entrypoints": {
     "main": [
-      "io.github.lucaargolo.structureworld.Mod"
+      "io.github.null2264.skyblockcreator.Mod"
     ],
     "client": [],
     "server": [
-      "io.github.lucaargolo.structureworld.core.ModServer"
+      "io.github.null2264.skyblockcreator.core.ModServer"
     ]
   },
   "mixins": [
-    "structureworld.mixins.json"
+    "skyblockcreator.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.11.3",

@@ -1,6 +1,6 @@
-package io.github.lucaargolo.structureworld.mixin;
+package io.github.null2264.skyblockcreator.mixin;
 
-import io.github.lucaargolo.structureworld.command.StructureWorldState;
+import io.github.null2264.skyblockcreator.command.StructureWorldState;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;

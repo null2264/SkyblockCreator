@@ -1,13 +1,13 @@
-package io.github.lucaargolo.structureworld.command;
+package io.github.null2264.skyblockcreator.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import io.github.lucaargolo.structureworld.Mod;
-import io.github.lucaargolo.structureworld.error.AlreadyHaveIsland;
-import io.github.lucaargolo.structureworld.error.InvalidChunkGenerator;
-import io.github.lucaargolo.structureworld.error.NoIslandFound;
+import io.github.null2264.skyblockcreator.Mod;
+import io.github.null2264.skyblockcreator.error.AlreadyHaveIsland;
+import io.github.null2264.skyblockcreator.error.InvalidChunkGenerator;
+import io.github.null2264.skyblockcreator.error.NoIslandFound;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -17,9 +17,9 @@ import net.minecraft.text.Text;
 public class StructureWorldCommand {
     // TODO: Add team support
 
-    private static final SimpleCommandExceptionType INVALID_CHUNK_GENERATOR = new SimpleCommandExceptionType(Text.translatable("commands.structureworld.invalid_chunk_generator"));
-    private static final SimpleCommandExceptionType ISLAND_FOR_UUID_ALREADY_EXISTS = new SimpleCommandExceptionType(Text.translatable("commands.structureworld.island_for_uuid_already_exists"));
-    private static final SimpleCommandExceptionType NO_ISLAND_FOR_UUID = new SimpleCommandExceptionType(Text.translatable("commands.structureworld.no_island_for_uuid"));
+    private static final SimpleCommandExceptionType INVALID_CHUNK_GENERATOR = new SimpleCommandExceptionType(Text.translatable("commands.skyblockcreator.invalid_chunk_generator"));
+    private static final SimpleCommandExceptionType ISLAND_FOR_UUID_ALREADY_EXISTS = new SimpleCommandExceptionType(Text.translatable("commands.skyblockcreator.island_for_uuid_already_exists"));
+    private static final SimpleCommandExceptionType NO_ISLAND_FOR_UUID = new SimpleCommandExceptionType(Text.translatable("commands.skyblockcreator.no_island_for_uuid"));
 
     private static final LiteralArgumentBuilder<ServerCommandSource> create = CommandManager
             .literal("create")
@@ -34,7 +34,7 @@ public class StructureWorldCommand {
                 } catch (AlreadyHaveIsland e) {
                     throw ISLAND_FOR_UUID_ALREADY_EXISTS.create();
                 }
-                context.getSource().sendFeedback(Text.translatable("commands.structureworld.created_island", playerEntity.getDisplayName()), false);
+                context.getSource().sendFeedback(Text.translatable("commands.skyblockcreator.created_island", playerEntity.getDisplayName()), false);
                 return 1;
             })
             .then(CommandManager.argument("player", EntityArgumentType.player())
@@ -49,7 +49,7 @@ public class StructureWorldCommand {
                         } catch (AlreadyHaveIsland e) {
                             throw ISLAND_FOR_UUID_ALREADY_EXISTS.create();
                         }
-                        context.getSource().sendFeedback(Text.translatable("commands.structureworld.created_island", playerEntity.getDisplayName()), true);
+                        context.getSource().sendFeedback(Text.translatable("commands.skyblockcreator.created_island", playerEntity.getDisplayName()), true);
                         return 1;
                     })
             );
@@ -67,7 +67,7 @@ public class StructureWorldCommand {
                 } catch (NoIslandFound e) {
                     throw NO_ISLAND_FOR_UUID.create();
                 }
-                context.getSource().sendFeedback(Text.translatable("commands.structureworld.deleted_island", playerEntity.getDisplayName()), false);
+                context.getSource().sendFeedback(Text.translatable("commands.skyblockcreator.deleted_island", playerEntity.getDisplayName()), false);
                 return 1;
             })
             .then(CommandManager.argument("player", EntityArgumentType.player())
@@ -82,7 +82,7 @@ public class StructureWorldCommand {
                         } catch (NoIslandFound e) {
                             throw NO_ISLAND_FOR_UUID.create();
                         }
-                        context.getSource().sendFeedback(Text.translatable("commands.structureworld.deleted_island", playerEntity.getDisplayName()), true);
+                        context.getSource().sendFeedback(Text.translatable("commands.skyblockcreator.deleted_island", playerEntity.getDisplayName()), true);
                         return 1;
                     })
             );
@@ -101,7 +101,7 @@ public class StructureWorldCommand {
                 } catch (NoIslandFound noIsland) {
                     throw NO_ISLAND_FOR_UUID.create();
                 }
-                context.getSource().sendFeedback(Text.translatable("commands.structureworld.teleported_to_island", player.getDisplayName()), false);
+                context.getSource().sendFeedback(Text.translatable("commands.skyblockcreator.teleported_to_island", player.getDisplayName()), false);
                 return 1;
             })
             .then(CommandManager.argument("player", EntityArgumentType.player())
@@ -117,20 +117,20 @@ public class StructureWorldCommand {
                         } catch (NoIslandFound noIsland) {
                             throw NO_ISLAND_FOR_UUID.create();
                         }
-                        context.getSource().sendFeedback(Text.translatable("commands.structureworld.teleported_to_island", player.getDisplayName()), true);
+                        context.getSource().sendFeedback(Text.translatable("commands.skyblockcreator.teleported_to_island", player.getDisplayName()), true);
                         return 1;
                     })
             );
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         LiteralCommandNode<ServerCommandSource> mainNode = dispatcher.register(
-                CommandManager.literal("structureworld")
+                CommandManager.literal(Mod.CONFIG.getCommandName())
                         .then(create)
                         .then(delete)
                         .then(teleport)
         );
         dispatcher.register(
-                CommandManager.literal("sw").redirect(mainNode)
+                CommandManager.literal(Mod.CONFIG.getCommandAlias()).redirect(mainNode)
         );
     }
 

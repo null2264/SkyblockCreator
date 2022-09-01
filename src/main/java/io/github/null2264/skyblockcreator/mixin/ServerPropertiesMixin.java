@@ -1,6 +1,6 @@
-package io.github.lucaargolo.structureworld.mixin;
+package io.github.null2264.skyblockcreator.mixin;
 
-import io.github.lucaargolo.structureworld.Mod;
+import io.github.null2264.skyblockcreator.Mod;
 import net.minecraft.server.dedicated.ServerPropertiesHandler;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +21,7 @@ public abstract class ServerPropertiesMixin {
         // Backwards compat
         if (currentType.startsWith("structure_")) {
             String newType = currentType.replace("structure_", Mod.MOD_ID + ":");
-            Mod.LOGGER.warn("The usage of \"structure_\" is deprecated in version 1.2.4, please use \"structureworld:\" instead! (" + newType + ")");
+            Mod.LOGGER.warn("The usage of \"structure_\" is deprecated in version 1.3.0, please use \"" + Mod.MOD_ID + ":\" instead! (" + newType + ")");
             return newType;
         }
         return currentType;

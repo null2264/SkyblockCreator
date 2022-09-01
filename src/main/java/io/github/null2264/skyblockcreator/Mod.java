@@ -1,13 +1,13 @@
-package io.github.lucaargolo.structureworld;
+package io.github.null2264.skyblockcreator;
 
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
-import io.github.lucaargolo.structureworld.command.StructureWorldCommand;
-import io.github.lucaargolo.structureworld.core.ModConfig;
-import io.github.lucaargolo.structureworld.worldgen.StructureChunkGenerator;
-import io.github.lucaargolo.structureworld.worldgen.StructureWorldPreset;
+import io.github.null2264.skyblockcreator.command.StructureWorldCommand;
+import io.github.null2264.skyblockcreator.core.ModConfig;
+import io.github.null2264.skyblockcreator.worldgen.StructureChunkGenerator;
+import io.github.null2264.skyblockcreator.worldgen.StructureWorldPreset;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
@@ -32,14 +32,14 @@ import java.util.Objects;
 
 public class Mod implements ModInitializer {
 
-    public static final String MOD_ID = "structureworld";
+    public static final String MOD_ID = "skyblockcreator";
     public static final Logger LOGGER = LogManager.getLogger("Structure World");
     public static final HashMap<String, StructureTemplate> STRUCTURES = Maps.newHashMap();
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static ModConfig CONFIG;
     public static List<RegistryKey<WorldPreset>> TO_BE_DISPLAYED = List.of();
     public static String OVERRIDED_LEVEL_TYPE = null;
-    public static Path configPath = Path.of(FabricLoader.getInstance().getConfigDir() + File.separator + "structureworld");
+    public static Path configPath = Path.of(FabricLoader.getInstance().getConfigDir() + File.separator + MOD_ID);
 
     public static RegistryKey<WorldPreset> registryKeyOf(String id) {
         return RegistryKey.of(Registry.WORLD_PRESET_KEY, new Identifier(MOD_ID, id));
@@ -49,14 +49,14 @@ public class Mod implements ModInitializer {
     public void onInitialize() {
         Registry.register(Registry.CHUNK_GENERATOR, new Identifier(MOD_ID, "structure_chunk_generator"), StructureChunkGenerator.CODEC);
         File structuresFolder = new File(configPath + File.separator + "structures");
-        File configFile = new File(Mod.configPath + File.separator + "structureworld.json");
+        File configFile = new File(Mod.configPath + File.separator + MOD_ID + ".json");
 
         LOGGER.info("Trying to read structures folder...");
         try {
             if (!structuresFolder.exists()) {
                 LOGGER.info("No structures folder found, creating a new one...");
                 if (structuresFolder.mkdirs()) {
-                    Path builtinStructuresFolderPath = FabricLoader.getInstance().getModContainer("structureworld").orElseThrow(() -> new Exception("Couldn't find ModContainer")).findPath("structures").orElseThrow();
+                    Path builtinStructuresFolderPath = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow(() -> new Exception("Couldn't find ModContainer")).findPath("structures").orElseThrow();
                     List<Path> builtinStructuresPath = Files.walk(builtinStructuresFolderPath).filter(Files::isRegularFile).toList();
                     for (Path builtinStructurePath : builtinStructuresPath) {
                         InputStream builtinStructureInputStream = Files.newInputStream(builtinStructurePath);

@@ -33,7 +33,7 @@ operator fun Project.get(property: String): String {
     return property(property) as String
 }
 
-configure<JavaPluginConvention> {
+configure<JavaPluginExtension> {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 }
@@ -46,7 +46,7 @@ val versionSplit = (version as String).split("+")
 
 val releaseName = "${versionSplit[0]} (mc${versionSplit[1]})"
 val releaseType = versionSplit[0].split("-").let { if(it.isNotEmpty()) if(it[1] == "BETA" || it[1] == "ALPHA") it[1] else "ALPHA" else "RELEASE" }
-val releaseFile = "${buildDir}/libs/${base.archivesBaseName}-${version}.jar"
+val releaseFile = "${buildDir}/libs/${base.archivesName}-${version}.jar"
 val cfGameVersion = (version as String).split("+")[1].let{ if(it == project["minecraft_version"]) it else "$it-Snapshot"}
 
 fun getChangeLog(): String {
@@ -67,7 +67,7 @@ fun getBranch(): String {
 }
 
 loom {
-    accessWidenerPath.set(file("src/main/resources/structureworld.accesswidener"))
+    accessWidenerPath.set(file("src/main/resources/skyblockcreator.accesswidener"))
 }
 
 repositories {

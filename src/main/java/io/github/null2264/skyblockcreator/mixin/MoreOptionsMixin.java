@@ -1,6 +1,6 @@
-package io.github.lucaargolo.structureworld.mixin;
+package io.github.null2264.skyblockcreator.mixin;
 
-import io.github.lucaargolo.structureworld.Mod;
+import io.github.null2264.skyblockcreator.Mod;
 import net.minecraft.client.gui.screen.world.MoreOptionsDialog;
 import net.minecraft.client.world.GeneratorOptionsHolder;
 import net.minecraft.tag.TagKey;
