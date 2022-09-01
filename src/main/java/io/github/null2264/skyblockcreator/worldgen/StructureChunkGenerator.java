@@ -55,8 +55,8 @@ public class StructureChunkGenerator extends ChunkGenerator {
     private final boolean enableBottomBedrock;
     private final boolean isBedrockFlat;
 
-    public StructureChunkGenerator(Registry<StructureSet> registry, BiomeSource biomeSource, String structure, BlockPos structureOffset, BlockPos playerSpawnOffset, BlockState fillmentBlock, boolean enableTopBedrock, boolean enableBottomBedrock, boolean isBedrockFlat) {
-        super(registry, Optional.of(RegistryEntryList.of(Collections.emptyList())), biomeSource);
+    public StructureChunkGenerator(Registry<StructureSet> registry, Optional<RegistryEntryList<StructureSet>> optional, BiomeSource biomeSource, String structure, BlockPos structureOffset, BlockPos playerSpawnOffset, BlockState fillmentBlock, boolean enableTopBedrock, boolean enableBottomBedrock, boolean isBedrockFlat) {
+        super(registry, optional, biomeSource);
         this.structure = structure;
         this.structureOffset = structureOffset;
         this.playerSpawnOffset = playerSpawnOffset;
@@ -64,6 +64,10 @@ public class StructureChunkGenerator extends ChunkGenerator {
         this.enableTopBedrock = enableTopBedrock;
         this.enableBottomBedrock = enableBottomBedrock;
         this.isBedrockFlat = isBedrockFlat;
+    }
+
+    public StructureChunkGenerator(Registry<StructureSet> registry, BiomeSource biomeSource, String structure, BlockPos structureOffset, BlockPos playerSpawnOffset, BlockState fillmentBlock, boolean enableTopBedrock, boolean enableBottomBedrock, boolean isBedrockFlat) {
+        this(registry, Optional.of(RegistryEntryList.of(Collections.emptyList())), biomeSource, structure, structureOffset, playerSpawnOffset, fillmentBlock, enableTopBedrock, enableBottomBedrock, isBedrockFlat);
     }
 
     public String getStructure() {

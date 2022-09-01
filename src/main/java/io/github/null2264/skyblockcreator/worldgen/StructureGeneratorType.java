@@ -24,6 +24,8 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 import net.minecraft.world.gen.chunk.NoiseChunkGenerator;
 
+import java.util.Optional;
+
 @Environment(EnvType.CLIENT)
 public class StructureGeneratorType extends GeneratorType {
     ModConfig.StructureWorldConfig structureWorldConfig;
@@ -96,6 +98,7 @@ public class StructureGeneratorType extends GeneratorType {
             BlockState fillmentBlockState = Registry.BLOCK.get(new Identifier("minecraft", "air")).getDefaultState();
             return new StructureChunkGenerator(
                     structureSets,
+                    Optional.empty(),
                     MultiNoiseBiomeSource.Preset.NETHER.getBiomeSource(biome, true),
                     structureWorldConfig.getStructureIdentifier(),
                     structureWorldConfig.getStructureOffset(),
@@ -125,6 +128,7 @@ public class StructureGeneratorType extends GeneratorType {
             BlockState fillmentBlockState = Registry.BLOCK.get(new Identifier("minecraft", "air")).getDefaultState();
             return new StructureChunkGenerator(
                     structureSets,
+                    Optional.empty(),
                     new TheEndBiomeSource(biome, seed),
                     structureWorldConfig.getStructureIdentifier(),
                     structureWorldConfig.getStructureOffset(),
