@@ -43,11 +43,12 @@ public abstract class MoreOptionsMixin {
         ArrayList<RegistryEntry<WorldPreset>> mutablePresets = new ArrayList<>(presets.get());
         Mod.TO_BE_DISPLAYED.forEach(worldTypeKey -> {
             RegistryEntry<WorldPreset> worldPreset = presetRegistry.getOrCreateEntry(worldTypeKey);
-            mutablePresets.add(worldPreset);
             if (worldTypeKey.getValue().getPath().equals(Mod.OVERRIDED_LEVEL_TYPE)) {
+                mutablePresets.add(0, worldPreset);
                 this.presetEntry = Optional.of(worldPreset);
                 this.apply((generatorOptions) -> worldPreset.value().createGeneratorOptions(generatorOptions));
-            }
+            } else
+                mutablePresets.add(worldPreset);
         });
 
         return Optional.of(mutablePresets);
