@@ -48,8 +48,8 @@ public class ModConfig {
         private boolean topBedrockEnabled;
         private boolean bottomBedrockEnabled;
         private boolean isBedrockFlat;
-        private StructureDimensionConfig theEnd;
         private StructureDimensionConfig theNether;
+        private StructureDimensionConfig theEnd;
 
         public StructureDimensionConfig getTheEndConfig() {
             return theEnd;

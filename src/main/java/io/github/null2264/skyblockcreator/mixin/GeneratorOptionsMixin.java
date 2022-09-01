@@ -18,20 +18,4 @@ public abstract class GeneratorOptionsMixin {
     private static void fromProperties(DynamicRegistryManager dynamicRegistryManager, ServerPropertiesHandler.WorldGenProperties properties, CallbackInfoReturnable<GeneratorOptions> info) {
         ModServer.fromPropertiesHook(dynamicRegistryManager, properties, info);
     }
-
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/dedicated/ServerPropertiesHandler$WorldGenProperties;levelType()Ljava/lang/String;"), method = "fromProperties")
-    private static String onDefaultLevelType(ServerPropertiesHandler.WorldGenProperties instance) {
-        if (instance.levelType().equals("default") && ModServer.OVERRIDED_LEVEL_TYPE != null)
-            return ModServer.OVERRIDED_LEVEL_TYPE;
-
-        // Backwards compat
-        if (instance.levelType().startsWith("structure_")) {
-            String newType = instance.levelType().replace("structure_", Mod.MOD_ID + ":");
-            Mod.LOGGER.warn("The usage of \"structure_\" is deprecated in version 1.3.0, please use \"" + Mod.MOD_ID + ":\" instead! (" + newType + ")");
-            return newType;
-        }
-
-        return instance.levelType();
-    }
-
 }

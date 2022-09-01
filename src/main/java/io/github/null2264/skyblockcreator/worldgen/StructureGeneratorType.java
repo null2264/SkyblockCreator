@@ -26,126 +26,22 @@ import net.minecraft.world.gen.chunk.NoiseChunkGenerator;
 
 import java.util.Optional;
 
-@Environment(EnvType.CLIENT)
 public class StructureGeneratorType extends GeneratorType {
-    ModConfig.StructureWorldConfig structureWorldConfig;
+    StructureGeneratorOptions structureGeneratorOptions;
 
-    protected StructureGeneratorType(ModConfig.StructureWorldConfig structureWorldConfig) {
+    public StructureGeneratorType(ModConfig.StructureWorldConfig structureWorldConfig) {
         super(Mod.MOD_ID + "." + structureWorldConfig.getStructureIdentifier());
-        this.structureWorldConfig = structureWorldConfig;
+        this.structureGeneratorOptions = new StructureGeneratorOptions(structureWorldConfig);
     }
 
     @Override
     public GeneratorOptions createDefaultOptions(DynamicRegistryManager registryManager, long seed, boolean generateStructures, boolean bonusChest) {
-        Registry<Biome> biome = registryManager.get(Registry.BIOME_KEY);
-        Registry<StructureSet> structureSets = registryManager.get(Registry.STRUCTURE_SET_KEY);
-        Registry<ChunkGeneratorSettings> chunkGeneratorSettings = registryManager.get(Registry.CHUNK_GENERATOR_SETTINGS_KEY);
-        Registry<DoublePerlinNoiseSampler.NoiseParameters> worldGenNoise = registryManager.get(Registry.NOISE_WORLDGEN);
-        Registry<DimensionType> dimensionRegistry = registryManager.get(Registry.DIMENSION_TYPE_KEY);
-        SimpleRegistry<DimensionOptions> registry = new SimpleRegistry<>(Registry.DIMENSION_KEY, Lifecycle.stable(), null);
-
-        registry.add(DimensionOptions.OVERWORLD, new DimensionOptions(
-                dimensionRegistry.getOrCreateEntry(DimensionType.OVERWORLD_REGISTRY_KEY),
-                this.getChunkGenerator(registryManager, seed)
-            ),
-            Lifecycle.stable()
-        );
-
-        registry.add(DimensionOptions.NETHER, new DimensionOptions(
-                dimensionRegistry.getOrCreateEntry(DimensionType.THE_NETHER_REGISTRY_KEY),
-                getNetherChunkGenerator(biome, structureSets, chunkGeneratorSettings, worldGenNoise, seed)
-            ),
-            Lifecycle.stable()
-        );
-
-        registry.add(DimensionOptions.END, new DimensionOptions(
-                dimensionRegistry.getOrCreateEntry(DimensionType.THE_END_REGISTRY_KEY),
-                getEndChunkGenerator(biome, structureSets, chunkGeneratorSettings, worldGenNoise, seed)
-            ),
-            Lifecycle.stable()
-        );
-
-        return new GeneratorOptions(seed, generateStructures, bonusChest, registry);
+        return structureGeneratorOptions.createDefaultOptions(registryManager, seed, generateStructures, bonusChest);
     }
 
     @Override
     protected ChunkGenerator getChunkGenerator(DynamicRegistryManager registryManager, long seed) {
-        RegistryKey<Biome> biomeKey = RegistryKey.of(Registry.BIOME_KEY, new Identifier(structureWorldConfig.getBiomeIdentifier()));
-        Registry<StructureSet> structureSetRegistry = registryManager.get(Registry.STRUCTURE_SET_KEY);
-        Registry<Biome> biomeRegistry = registryManager.get(Registry.BIOME_KEY);
-        BlockState fillmentBlockState = Registry.BLOCK.get(new Identifier(structureWorldConfig.getFillmentBlockIdentifier())).getDefaultState();
-        return new StructureChunkGenerator(
-                structureSetRegistry,
-                new FixedBiomeSource(biomeRegistry.getOrCreateEntry(biomeKey)),
-                structureWorldConfig.getStructureIdentifier(),
-                structureWorldConfig.getStructureOffset(),
-                structureWorldConfig.getPlayerSpawnOffset(),
-                fillmentBlockState,
-                structureWorldConfig.isTopBedrockEnabled(),
-                structureWorldConfig.isBottomBedrockEnabled(),
-                structureWorldConfig.isBedrockFlat()
-        );
-    }
-
-    private ChunkGenerator getNetherChunkGenerator(
-            Registry<Biome> biome,
-            Registry<StructureSet> structureSets,
-            Registry<ChunkGeneratorSettings> chunkGeneratorSettings,
-            Registry<DoublePerlinNoiseSampler.NoiseParameters> worldGenNoise,
-            Long seed
-    ) {
-        if (structureWorldConfig.getTheEndConfig().isVoidMode()) {
-            BlockState fillmentBlockState = Registry.BLOCK.get(new Identifier("minecraft", "air")).getDefaultState();
-            return new StructureChunkGenerator(
-                    structureSets,
-                    Optional.empty(),
-                    MultiNoiseBiomeSource.Preset.NETHER.getBiomeSource(biome, true),
-                    structureWorldConfig.getStructureIdentifier(),
-                    structureWorldConfig.getStructureOffset(),
-                    structureWorldConfig.getPlayerSpawnOffset(),
-                    fillmentBlockState,
-                    structureWorldConfig.isTopBedrockEnabled(),
-                    structureWorldConfig.isBottomBedrockEnabled(),
-                    structureWorldConfig.isBedrockFlat()
-            );
-        }
-        return new NoiseChunkGenerator(
-                structureSets,
-                worldGenNoise,
-                MultiNoiseBiomeSource.Preset.NETHER.getBiomeSource(biome, true),
-                seed,
-                chunkGeneratorSettings.getOrCreateEntry(ChunkGeneratorSettings.NETHER)
-        );
-    }
-    private ChunkGenerator getEndChunkGenerator(
-            Registry<Biome> biome,
-            Registry<StructureSet> structureSets,
-            Registry<ChunkGeneratorSettings> chunkGeneratorSettings,
-            Registry<DoublePerlinNoiseSampler.NoiseParameters> worldGenNoise,
-            Long seed
-    ) {
-        if (structureWorldConfig.getTheEndConfig().isVoidMode()) {
-            BlockState fillmentBlockState = Registry.BLOCK.get(new Identifier("minecraft", "air")).getDefaultState();
-            return new StructureChunkGenerator(
-                    structureSets,
-                    Optional.empty(),
-                    new TheEndBiomeSource(biome, seed),
-                    structureWorldConfig.getStructureIdentifier(),
-                    structureWorldConfig.getStructureOffset(),
-                    structureWorldConfig.getPlayerSpawnOffset(),
-                    fillmentBlockState,
-                    structureWorldConfig.isTopBedrockEnabled(),
-                    structureWorldConfig.isBottomBedrockEnabled(),
-                    structureWorldConfig.isBedrockFlat()
-            );
-        }
-        return new NoiseChunkGenerator(
-                structureSets,
-                worldGenNoise,
-                new TheEndBiomeSource(biome, seed),
-                seed,
-                chunkGeneratorSettings.getOrCreateEntry(ChunkGeneratorSettings.END)
-        );
+        return structureGeneratorOptions.getChunkGenerator(registryManager, seed);
     }
 
     public static void register() {

@@ -1,19 +1,11 @@
 package io.github.null2264.skyblockcreator.core;
 
 import io.github.null2264.skyblockcreator.Mod;
-import io.github.null2264.skyblockcreator.worldgen.StructureChunkGenerator;
+import io.github.null2264.skyblockcreator.worldgen.StructureGeneratorOptions;
 import net.fabricmc.api.DedicatedServerModInitializer;
-import net.minecraft.block.BlockState;
 import net.minecraft.server.dedicated.ServerPropertiesHandler;
-import net.minecraft.structure.StructureSet;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.DynamicRegistryManager;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.FixedBiomeSource;
-import net.minecraft.world.dimension.DimensionOptions;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.GeneratorOptions;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -22,25 +14,32 @@ public class ModServer implements DedicatedServerModInitializer {
     public static String OVERRIDED_LEVEL_TYPE = null;
 
     public static void fromPropertiesHook(DynamicRegistryManager dynamicRegistryManager, ServerPropertiesHandler.WorldGenProperties properties, CallbackInfoReturnable<GeneratorOptions> info) {
-        String levelType = (properties.levelType() == null && OVERRIDED_LEVEL_TYPE != null)
-                ? OVERRIDED_LEVEL_TYPE
-                : properties.levelType();
+        String levelType = properties.levelType();
+        if (levelType.equals("default") && ModServer.OVERRIDED_LEVEL_TYPE != null)
+            levelType = ModServer.OVERRIDED_LEVEL_TYPE;
+
+        // Backwards compat
+        if (levelType.startsWith("structure_")) {
+            levelType = levelType.replace("structure_", Mod.MOD_ID + ":");
+            Mod.LOGGER.warn("The usage of \"structure_\" is deprecated in version 1.3.0, please use \"" + Mod.MOD_ID + ":\" instead! (" + levelType + ")");
+        }
 
         if (levelType.startsWith(Mod.MOD_ID + ":")) {
+            String finalLevelType = levelType;
             Mod.CONFIG.getStructureWorldConfigs().forEach(structureWorldConfig -> {
                 String structure = structureWorldConfig.getStructureIdentifier();
-                RegistryKey<Biome> biomeKey = RegistryKey.of(Registry.BIOME_KEY, new Identifier(structureWorldConfig.getBiomeIdentifier()));
 
-                if (levelType.equals(Mod.MOD_ID + ":" + structure)) {
-                    Registry<DimensionType> dimensionTypeRegistry = dynamicRegistryManager.get(Registry.DIMENSION_TYPE_KEY);
-                    Registry<Biome> biomeRegistry = dynamicRegistryManager.get(Registry.BIOME_KEY);
-                    Registry<DimensionOptions> simpleRegistry = DimensionType.createDefaultDimensionOptions(dynamicRegistryManager, 0L);
-
-                    BlockState fillmentBlockState = Registry.BLOCK.get(new Identifier(structureWorldConfig.getFillmentBlockIdentifier())).getDefaultState();
-                    Registry<StructureSet> structureSetRegistry = dynamicRegistryManager.get(Registry.STRUCTURE_SET_KEY);
-                    StructureChunkGenerator structureChunkGenerator = new StructureChunkGenerator(structureSetRegistry, new FixedBiomeSource(biomeRegistry.getOrCreateEntry(biomeKey)), structure, structureWorldConfig.getStructureOffset(), structureWorldConfig.getPlayerSpawnOffset(), fillmentBlockState, structureWorldConfig.isTopBedrockEnabled(), structureWorldConfig.isBottomBedrockEnabled(), structureWorldConfig.isBedrockFlat());
-                    Registry<DimensionOptions> finalRegistry = GeneratorOptions.getRegistryWithReplacedOverworldGenerator(dimensionTypeRegistry, simpleRegistry, structureChunkGenerator);
-                    info.setReturnValue(new GeneratorOptions(0L, false, false, finalRegistry));
+                if (finalLevelType.equals(Mod.MOD_ID + ":" + structure)) {
+                    long seed;
+                    if (!properties.levelSeed().isEmpty())
+                        try {
+                            seed = Long.parseLong(properties.levelSeed());
+                        } catch (Exception e) {
+                            seed = properties.levelSeed().hashCode();
+                        }
+                    else
+                        seed = 0L;
+                    info.setReturnValue(new StructureGeneratorOptions(structureWorldConfig).createDefaultOptions(dynamicRegistryManager, seed, properties.generateStructures(), false));
                 }
             });
         }
