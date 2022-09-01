@@ -1,30 +1,13 @@
 package io.github.null2264.skyblockcreator.worldgen;
 
-import com.mojang.serialization.Lifecycle;
 import io.github.null2264.skyblockcreator.Mod;
 import io.github.null2264.skyblockcreator.core.ModClient;
 import io.github.null2264.skyblockcreator.core.ModConfig;
 import io.github.null2264.skyblockcreator.mixin.GeneratorTypeAccessor;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.world.GeneratorType;
-import net.minecraft.structure.StructureSet;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
-import net.minecraft.util.registry.*;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.FixedBiomeSource;
-import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
-import net.minecraft.world.biome.source.TheEndBiomeSource;
-import net.minecraft.world.dimension.DimensionOptions;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.util.registry.DynamicRegistryManager;
 import net.minecraft.world.gen.GeneratorOptions;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
-import net.minecraft.world.gen.chunk.NoiseChunkGenerator;
-
-import java.util.Optional;
 
 public class StructureGeneratorType extends GeneratorType {
     StructureGeneratorOptions structureGeneratorOptions;
@@ -32,16 +15,6 @@ public class StructureGeneratorType extends GeneratorType {
     public StructureGeneratorType(ModConfig.StructureWorldConfig structureWorldConfig) {
         super(Mod.MOD_ID + "." + structureWorldConfig.getStructureIdentifier());
         this.structureGeneratorOptions = new StructureGeneratorOptions(structureWorldConfig);
-    }
-
-    @Override
-    public GeneratorOptions createDefaultOptions(DynamicRegistryManager registryManager, long seed, boolean generateStructures, boolean bonusChest) {
-        return structureGeneratorOptions.createDefaultOptions(registryManager, seed, generateStructures, bonusChest);
-    }
-
-    @Override
-    protected ChunkGenerator getChunkGenerator(DynamicRegistryManager registryManager, long seed) {
-        return structureGeneratorOptions.getChunkGenerator(registryManager, seed);
     }
 
     public static void register() {
@@ -59,5 +32,15 @@ public class StructureGeneratorType extends GeneratorType {
             }
 
         });
+    }
+
+    @Override
+    public GeneratorOptions createDefaultOptions(DynamicRegistryManager registryManager, long seed, boolean generateStructures, boolean bonusChest) {
+        return structureGeneratorOptions.createDefaultOptions(registryManager, seed, generateStructures, bonusChest);
+    }
+
+    @Override
+    protected ChunkGenerator getChunkGenerator(DynamicRegistryManager registryManager, long seed) {
+        return structureGeneratorOptions.getChunkGenerator(registryManager, seed);
     }
 }

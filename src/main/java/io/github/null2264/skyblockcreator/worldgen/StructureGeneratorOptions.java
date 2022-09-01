@@ -108,6 +108,7 @@ public class StructureGeneratorOptions {
                 chunkGeneratorSettings.getOrCreateEntry(ChunkGeneratorSettings.NETHER)
         );
     }
+
     private ChunkGenerator getEndChunkGenerator(
             Registry<Biome> biome,
             Registry<StructureSet> structureSets,
