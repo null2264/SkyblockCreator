@@ -93,7 +93,7 @@ public class StructureGeneratorType extends GeneratorType {
             Long seed
     ) {
         if (structureWorldConfig.getTheEndConfig().isVoidMode()) {
-            BlockState fillmentBlockState = Registry.BLOCK.get(new Identifier(structureWorldConfig.getFillmentBlockIdentifier())).getDefaultState();
+            BlockState fillmentBlockState = Registry.BLOCK.get(new Identifier("minecraft", "air")).getDefaultState();
             return new StructureChunkGenerator(
                     structureSets,
                     MultiNoiseBiomeSource.Preset.NETHER.getBiomeSource(biome, true),
@@ -122,7 +122,7 @@ public class StructureGeneratorType extends GeneratorType {
             Long seed
     ) {
         if (structureWorldConfig.getTheEndConfig().isVoidMode()) {
-            BlockState fillmentBlockState = Registry.BLOCK.get(new Identifier(structureWorldConfig.getFillmentBlockIdentifier())).getDefaultState();
+            BlockState fillmentBlockState = Registry.BLOCK.get(new Identifier("minecraft", "air")).getDefaultState();
             return new StructureChunkGenerator(
                     structureSets,
                     new TheEndBiomeSource(biome, seed),
