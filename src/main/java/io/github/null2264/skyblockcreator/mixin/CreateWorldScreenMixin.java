@@ -18,7 +18,7 @@ import java.util.OptionalLong;
 @Mixin(CreateWorldScreen.class)
 public class CreateWorldScreenMixin {
 
-    @Inject(at = @At("HEAD"), method = "create", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "create*", cancellable = true)
     private static void onCreate(Screen parent, CallbackInfoReturnable<CreateWorldScreen> callbackInfoReturnable) {
         if (ModClient.OVERRIDED_GENERATOR_TYPE != null) {
             DynamicRegistryManager.Mutable dynamicRegistryManager = DynamicRegistryManager.createAndLoad();

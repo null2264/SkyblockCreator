@@ -27,7 +27,7 @@ public abstract class GeneratorOptionsMixin {
         // Backwards compat
         if (instance.levelType().startsWith("structure_")) {
             String newType = instance.levelType().replace("structure_", Mod.MOD_ID + ":");
-            Mod.LOGGER.warn("The usage of \"structure_\" is deprecated in version 1.2.4, please use \"" + Mod.MOD_ID + ":\" instead! (" + newType + ")");
+            Mod.LOGGER.warn("The usage of \"structure_\" is deprecated in version 1.3.0, please use \"" + Mod.MOD_ID + ":\" instead! (" + newType + ")");
             return newType;
         }
 
