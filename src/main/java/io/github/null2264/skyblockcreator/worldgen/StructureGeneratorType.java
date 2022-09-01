@@ -40,7 +40,7 @@ public class StructureGeneratorType extends GeneratorType {
         Registry<ChunkGeneratorSettings> chunkGeneratorSettings = registryManager.get(Registry.CHUNK_GENERATOR_SETTINGS_KEY);
         Registry<DoublePerlinNoiseSampler.NoiseParameters> worldGenNoise = registryManager.get(Registry.NOISE_WORLDGEN);
         Registry<DimensionType> dimensionRegistry = registryManager.get(Registry.DIMENSION_TYPE_KEY);
-        SimpleRegistry<DimensionOptions> registry = new SimpleRegistry<>(Registry.DIMENSION_KEY, Lifecycle.experimental(), null);
+        SimpleRegistry<DimensionOptions> registry = new SimpleRegistry<>(Registry.DIMENSION_KEY, Lifecycle.stable(), null);
 
         registry.add(DimensionOptions.OVERWORLD, new DimensionOptions(
                 dimensionRegistry.getOrCreateEntry(DimensionType.OVERWORLD_REGISTRY_KEY),
