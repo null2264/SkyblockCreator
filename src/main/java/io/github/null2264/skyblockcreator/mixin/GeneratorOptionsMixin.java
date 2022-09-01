@@ -1,7 +1,7 @@
-package io.github.lucaargolo.structureworld.mixin;
+package io.github.null2264.skyblockcreator.mixin;
 
-import io.github.lucaargolo.structureworld.Mod;
-import io.github.lucaargolo.structureworld.core.ModServer;
+import io.github.null2264.skyblockcreator.Mod;
+import io.github.null2264.skyblockcreator.core.ModServer;
 import net.minecraft.server.dedicated.ServerPropertiesHandler;
 import net.minecraft.util.registry.DynamicRegistryManager;
 import net.minecraft.world.gen.GeneratorOptions;
@@ -20,14 +20,14 @@ public abstract class GeneratorOptionsMixin {
     }
 
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/dedicated/ServerPropertiesHandler$WorldGenProperties;levelType()Ljava/lang/String;"), method = "fromProperties")
-    private static <T> String onDefaultLevelType(ServerPropertiesHandler.WorldGenProperties instance) {
+    private static String onDefaultLevelType(ServerPropertiesHandler.WorldGenProperties instance) {
         if (instance.levelType().equals("default") && ModServer.OVERRIDED_LEVEL_TYPE != null)
             return ModServer.OVERRIDED_LEVEL_TYPE;
 
         // Backwards compat
         if (instance.levelType().startsWith("structure_")) {
             String newType = instance.levelType().replace("structure_", Mod.MOD_ID + ":");
-            Mod.LOGGER.warn("The usage of \"structure_\" is deprecated in version 1.2.4, please use \"structureworld:\" instead! (" + newType + ")");
+            Mod.LOGGER.warn("The usage of \"structure_\" is deprecated in version 1.2.4, please use \"" + Mod.MOD_ID + ":\" instead! (" + newType + ")");
             return newType;
         }
 

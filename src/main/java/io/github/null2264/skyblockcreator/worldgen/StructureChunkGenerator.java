@@ -1,4 +1,4 @@
-package io.github.lucaargolo.structureworld.worldgen;
+package io.github.null2264.skyblockcreator.worldgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

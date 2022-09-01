@@ -1,10 +1,10 @@
-package io.github.lucaargolo.structureworld.command;
+package io.github.null2264.skyblockcreator.command;
 
-import io.github.lucaargolo.structureworld.Mod;
-import io.github.lucaargolo.structureworld.error.AlreadyHaveIsland;
-import io.github.lucaargolo.structureworld.error.InvalidChunkGenerator;
-import io.github.lucaargolo.structureworld.error.NoIslandFound;
-import io.github.lucaargolo.structureworld.worldgen.StructureChunkGenerator;
+import io.github.null2264.skyblockcreator.Mod;
+import io.github.null2264.skyblockcreator.error.AlreadyHaveIsland;
+import io.github.null2264.skyblockcreator.error.InvalidChunkGenerator;
+import io.github.null2264.skyblockcreator.error.NoIslandFound;
+import io.github.null2264.skyblockcreator.worldgen.StructureChunkGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;

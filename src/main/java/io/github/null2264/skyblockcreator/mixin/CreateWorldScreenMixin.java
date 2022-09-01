@@ -1,6 +1,6 @@
-package io.github.lucaargolo.structureworld.mixin;
+package io.github.null2264.skyblockcreator.mixin;
 
-import io.github.lucaargolo.structureworld.core.ModClient;
+import io.github.null2264.skyblockcreator.core.ModClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
 import net.minecraft.client.gui.screen.world.MoreOptionsDialog;

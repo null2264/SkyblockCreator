@@ -1,4 +1,4 @@
-package io.github.lucaargolo.structureworld.error;
+package io.github.null2264.skyblockcreator.error;
 
 public class AlreadyHaveIsland extends Exception {
     public AlreadyHaveIsland() {

@@ -1,4 +1,4 @@
-package io.github.lucaargolo.structureworld.mixin;
+package io.github.null2264.skyblockcreator.mixin;
 
 import net.minecraft.client.world.GeneratorType;
 import org.spongepowered.asm.mixin.Mixin;

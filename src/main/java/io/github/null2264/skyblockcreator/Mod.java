@@ -1,12 +1,12 @@
-package io.github.lucaargolo.structureworld;
+package io.github.null2264.skyblockcreator;
 
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
-import io.github.lucaargolo.structureworld.command.StructureWorldCommand;
-import io.github.lucaargolo.structureworld.core.ModConfig;
-import io.github.lucaargolo.structureworld.worldgen.StructureChunkGenerator;
+import io.github.null2264.skyblockcreator.command.StructureWorldCommand;
+import io.github.null2264.skyblockcreator.core.ModConfig;
+import io.github.null2264.skyblockcreator.worldgen.StructureChunkGenerator;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
@@ -28,7 +28,7 @@ import java.util.List;
 public class Mod implements ModInitializer {
 
     // TODO: Investigate "DimensionType.createDefaultDimensionOptions" for void nether and void the end in 1.18.2
-    public static final String MOD_ID = "structureworld";
+    public static final String MOD_ID = "skyblockcreator";
     public static final Logger LOGGER = LogManager.getLogger("Structure World");
     public static final HashMap<String, Structure> STRUCTURES = Maps.newHashMap();
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -39,15 +39,15 @@ public class Mod implements ModInitializer {
         Registry.register(Registry.CHUNK_GENERATOR, new Identifier(MOD_ID, "structure_chunk_generator"), StructureChunkGenerator.CODEC);
 
         Path configPath = FabricLoader.getInstance().getConfigDir();
-        File structuresFolder = new File(configPath + File.separator + "structureworld" + File.separator + "structures");
-        File configFile = new File(configPath + File.separator + "structureworld" + File.separator + "structureworld.json");
+        File structuresFolder = new File(configPath + File.separator + Mod.MOD_ID + File.separator + "structures");
+        File configFile = new File(configPath + File.separator + Mod.MOD_ID + File.separator + Mod.MOD_ID + ".json");
 
         LOGGER.info("Trying to read structures folder...");
         try {
             if (!structuresFolder.exists()) {
                 LOGGER.info("No structures folder found, creating a new one...");
                 if (structuresFolder.mkdirs()) {
-                    Path builtinStructuresFolderPath = FabricLoader.getInstance().getModContainer("structureworld").orElseThrow(() -> new Exception("Couldn't find ModContainer")).findPath("structures").orElseThrow();
+                    Path builtinStructuresFolderPath = FabricLoader.getInstance().getModContainer(Mod.MOD_ID).orElseThrow(() -> new Exception("Couldn't find ModContainer")).findPath("structures").orElseThrow();
                     List<Path> builtinStructuresPath = Files.walk(builtinStructuresFolderPath).filter(Files::isRegularFile).toList();
                     for (Path builtinStructurePath : builtinStructuresPath) {
                         InputStream builtinStructureInputStream = Files.newInputStream(builtinStructurePath);

@@ -1,4 +1,4 @@
-package io.github.lucaargolo.structureworld.core;
+package io.github.null2264.skyblockcreator.core;
 
 import net.minecraft.util.math.BlockPos;
 
@@ -16,6 +16,8 @@ public class ModConfig {
     private int createPlatformPermissionLevel = 0;
     private int teleportToPlatformPermissionLevel = 0;
     private int platformDistanceRadius = 1000;
+    private String commandName = "skyblock";
+    private String commandAlias = "sb";
 
     public int getCreatePlatformPermissionLevel() {
         return createPlatformPermissionLevel;
@@ -28,6 +30,8 @@ public class ModConfig {
     public int getPlatformDistanceRadius() {
         return platformDistanceRadius;
     }
+    public String getCommandName() { return commandName; }
+    public String getCommandAlias() { return commandAlias; }
 
     public List<StructureWorldConfig> getStructureWorldConfigs() {
         return structureWorldConfigs;
