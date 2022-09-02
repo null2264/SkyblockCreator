@@ -35,6 +35,7 @@ public class StructureChunkGenerator extends ChunkGenerator {
     public static final Codec<StructureChunkGenerator> CODEC = RecordCodecBuilder.create((instance) ->
             instance.group(
                     RegistryOps.createRegistryCodec(Registry.STRUCTURE_SET_KEY).forGetter((chunkGenerator) -> chunkGenerator.structureSetRegistry),
+                    Codec.STRING.stable().fieldOf("dimension").forGetter((generator) -> generator.dimension),
                     BiomeSource.CODEC.fieldOf("biome_source").forGetter((generator) -> generator.biomeSource),
                     Codec.STRING.stable().fieldOf("structure").forGetter((generator) -> generator.structure),
                     BlockPos.CODEC.fieldOf("structureOffset").forGetter((generator) -> generator.structureOffset),
@@ -52,9 +53,10 @@ public class StructureChunkGenerator extends ChunkGenerator {
     private final boolean enableTopBedrock;
     private final boolean enableBottomBedrock;
     private final boolean isBedrockFlat;
+    private final String dimension;
 
-    public StructureChunkGenerator(Registry<StructureSet> registry, BiomeSource biomeSource, String structure, BlockPos structureOffset, BlockPos playerSpawnOffset, BlockState fillmentBlock, boolean enableTopBedrock, boolean enableBottomBedrock, boolean isBedrockFlat) {
-        super(registry, Optional.of(RegistryEntryList.of(Collections.emptyList())), biomeSource);
+    public StructureChunkGenerator(Registry<StructureSet> registry, String dimension, BiomeSource biomeSource, String structure, BlockPos structureOffset, BlockPos playerSpawnOffset, BlockState fillmentBlock, boolean enableTopBedrock, boolean enableBottomBedrock, boolean isBedrockFlat) {
+        super(registry, dimension.equals("overworld") ? Optional.of(RegistryEntryList.of(Collections.emptyList())) : Optional.empty(), biomeSource);
         this.structure = structure;
         this.structureOffset = structureOffset;
         this.playerSpawnOffset = playerSpawnOffset;
@@ -62,6 +64,11 @@ public class StructureChunkGenerator extends ChunkGenerator {
         this.enableTopBedrock = enableTopBedrock;
         this.enableBottomBedrock = enableBottomBedrock;
         this.isBedrockFlat = isBedrockFlat;
+        this.dimension = dimension;
+    }
+
+    public StructureChunkGenerator(Registry<StructureSet> registry, BiomeSource biomeSource, String structure, BlockPos structureOffset, BlockPos playerSpawnOffset, BlockState fillmentBlock, boolean enableTopBedrock, boolean enableBottomBedrock, boolean isBedrockFlat) {
+        this(registry, "overworld", biomeSource, structure, structureOffset, playerSpawnOffset, fillmentBlock, enableTopBedrock, enableBottomBedrock, isBedrockFlat);
     }
 
     public String getStructure() {

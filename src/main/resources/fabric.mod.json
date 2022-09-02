@@ -17,7 +17,7 @@
     "issues": "https://github.com/null2264/structure-world/issues"
   },
   "license": "MPL-2.0",
-  "icon": "assets/structureworld/icon.png",
+  "icon": "assets/skyblockcreator/icon.png",
   "environment": "*",
   "accessWidener": "skyblockcreator.accesswidener",
   "entrypoints": {
