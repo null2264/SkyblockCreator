@@ -27,7 +27,6 @@ import java.util.List;
 
 public class Mod implements ModInitializer {
 
-    // TODO: Investigate "DimensionType.createDefaultDimensionOptions" for void nether and void the end in 1.18.2
     public static final String MOD_ID = "skyblockcreator";
     public static final Logger LOGGER = LogManager.getLogger("Structure World");
     public static final HashMap<String, Structure> STRUCTURES = Maps.newHashMap();

@@ -1,12 +1,13 @@
 package io.github.null2264.skyblockcreator.core;
 
 import io.github.null2264.skyblockcreator.Mod;
-import io.github.null2264.skyblockcreator.worldgen.StructureGeneratorOptions;
+import io.github.null2264.skyblockcreator.worldgen.StructureWorldType;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.minecraft.server.dedicated.ServerPropertiesHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.DynamicRegistryManager;
 import net.minecraft.world.gen.GeneratorOptions;
+import net.minecraft.world.gen.random.RandomSeed;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 public class ModServer implements DedicatedServerModInitializer {
@@ -38,8 +39,8 @@ public class ModServer implements DedicatedServerModInitializer {
                             seed = properties.levelSeed().hashCode();
                         }
                     else
-                        seed = 0L;
-                    info.setReturnValue(new StructureGeneratorOptions(structureWorldConfig).createDefaultOptions(dynamicRegistryManager, seed, properties.generateStructures(), false));
+                        seed = RandomSeed.getSeed();
+                    info.setReturnValue(new StructureWorldType(structureWorldConfig).createDefaultOptions(dynamicRegistryManager, seed, properties.generateStructures(), false));
                 }
             });
         }
