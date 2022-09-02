@@ -46,7 +46,7 @@ val versionSplit = (version as String).split("+")
 
 val releaseName = "${versionSplit[0]} (mc${versionSplit[1]})"
 val releaseType = versionSplit[0].split("-").let { if(it.isNotEmpty()) if(it[1] == "BETA" || it[1] == "ALPHA") it[1] else "ALPHA" else "RELEASE" }
-val releaseFile = "${buildDir}/libs/${base.archivesName}-${version}.jar"
+val releaseFile = "${buildDir}/libs/${base.archivesName.get()}-${version}.jar"
 val cfGameVersion = (version as String).split("+")[1].let{ if(it == project["minecraft_version"]) it else "$it-Snapshot"}
 
 fun getChangeLog(): String {
