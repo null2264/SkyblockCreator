@@ -2,7 +2,6 @@ package io.github.null2264.skyblockcreator.worldgen;
 
 import io.github.null2264.skyblockcreator.Mod;
 import io.github.null2264.skyblockcreator.core.ModConfig;
-import net.minecraft.block.BlockState;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;

@@ -30,8 +30,14 @@ public class ModConfig {
     public int getPlatformDistanceRadius() {
         return platformDistanceRadius;
     }
-    public String getCommandName() { return commandName; }
-    public String getCommandAlias() { return commandAlias; }
+
+    public String getCommandName() {
+        return commandName;
+    }
+
+    public String getCommandAlias() {
+        return commandAlias;
+    }
 
     public List<StructureWorldConfig> getStructureWorldConfigs() {
         return structureWorldConfigs;
@@ -50,26 +56,6 @@ public class ModConfig {
         private boolean isBedrockFlat;
         private StructureDimensionConfig theEnd;
         private StructureDimensionConfig theNether;
-
-        public StructureDimensionConfig getTheEndConfig() {
-            return theEnd;
-        }
-
-        public StructureDimensionConfig getTheNetherConfig() {
-            return theNether;
-        }
-
-        public static class StructureDimensionConfig {
-            private final boolean voidMode;
-
-            public StructureDimensionConfig(boolean voidMode) {
-                this.voidMode = voidMode;
-            }
-
-            public boolean voidMode() {
-                return voidMode;
-            }
-        }
 
         public StructureWorldConfig(String structureIdentifier, String biomeIdentifier, int[] structureOffset, int[] playerSpawnOffset) {
             this.structureIdentifier = structureIdentifier;
@@ -93,6 +79,14 @@ public class ModConfig {
             this.isBedrockFlat = false;
             this.theNether = new StructureDimensionConfig(false);
             this.theEnd = new StructureDimensionConfig(false);
+        }
+
+        public StructureDimensionConfig getTheEndConfig() {
+            return theEnd;
+        }
+
+        public StructureDimensionConfig getTheNetherConfig() {
+            return theNether;
         }
 
         public boolean isOverridingDefault() {
@@ -129,6 +123,18 @@ public class ModConfig {
 
         public boolean isBedrockFlat() {
             return isBedrockFlat;
+        }
+
+        public static class StructureDimensionConfig {
+            private final boolean voidMode;
+
+            public StructureDimensionConfig(boolean voidMode) {
+                this.voidMode = voidMode;
+            }
+
+            public boolean voidMode() {
+                return voidMode;
+            }
         }
     }
 
