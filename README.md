@@ -20,7 +20,7 @@
 **Skyblock Creator** is a fork of [Structure World](https://github.com/lucaargolo/structure-world), a fabric mod that lets you add skyblock-like world type(s).
 
 ## Features
-For a complete list of features please check the mods [official page](https://modrinth.com/mod/structure-world-revived)
+For a complete list of features please check the mods [official page](https://modrinth.com/mod/skyblock-creator)
 
 ## License
 Distributed under the Mozilla Public License 2.0. See [`LICENSE`](./LICENSE) for more information.
