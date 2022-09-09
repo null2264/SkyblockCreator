@@ -17,15 +17,9 @@ import net.minecraft.text.Text;
 public class StructureWorldCommand {
     // TODO: Add team support
 
-<<<<<<< HEAD
     private static final SimpleCommandExceptionType INVALID_CHUNK_GENERATOR = new SimpleCommandExceptionType(Text.translatable("commands.skyblockcreator.invalid_chunk_generator"));
     private static final SimpleCommandExceptionType ISLAND_FOR_UUID_ALREADY_EXISTS = new SimpleCommandExceptionType(Text.translatable("commands.skyblockcreator.island_for_uuid_already_exists"));
     private static final SimpleCommandExceptionType NO_ISLAND_FOR_UUID = new SimpleCommandExceptionType(Text.translatable("commands.skyblockcreator.no_island_for_uuid"));
-=======
-    private static final SimpleCommandExceptionType INVALID_CHUNK_GENERATOR = new SimpleCommandExceptionType(new TranslatableText("commands.skyblockcreator.invalid_chunk_generator"));
-    private static final SimpleCommandExceptionType ISLAND_FOR_UUID_ALREADY_EXISTS = new SimpleCommandExceptionType(new TranslatableText("commands.skyblockcreator.island_for_uuid_already_exists"));
-    private static final SimpleCommandExceptionType NO_ISLAND_FOR_UUID = new SimpleCommandExceptionType(new TranslatableText("commands.skyblockcreator.no_island_for_uuid"));
->>>>>>> 1.18.2
 
     private static final LiteralArgumentBuilder<ServerCommandSource> create = CommandManager
             .literal("create")
@@ -40,11 +34,7 @@ public class StructureWorldCommand {
                 } catch (AlreadyHaveIsland e) {
                     throw ISLAND_FOR_UUID_ALREADY_EXISTS.create();
                 }
-<<<<<<< HEAD
                 context.getSource().sendFeedback(Text.translatable("commands.skyblockcreator.created_island", playerEntity.getDisplayName()), false);
-=======
-                context.getSource().sendFeedback(new TranslatableText("commands.skyblockcreator.created_island", playerEntity.getDisplayName()), false);
->>>>>>> 1.18.2
                 return 1;
             })
             .then(CommandManager.argument("player", EntityArgumentType.player())
@@ -59,11 +49,7 @@ public class StructureWorldCommand {
                         } catch (AlreadyHaveIsland e) {
                             throw ISLAND_FOR_UUID_ALREADY_EXISTS.create();
                         }
-<<<<<<< HEAD
                         context.getSource().sendFeedback(Text.translatable("commands.skyblockcreator.created_island", playerEntity.getDisplayName()), true);
-=======
-                        context.getSource().sendFeedback(new TranslatableText("commands.skyblockcreator.created_island", playerEntity.getDisplayName()), true);
->>>>>>> 1.18.2
                         return 1;
                     })
             );
@@ -81,11 +67,7 @@ public class StructureWorldCommand {
                 } catch (NoIslandFound e) {
                     throw NO_ISLAND_FOR_UUID.create();
                 }
-<<<<<<< HEAD
                 context.getSource().sendFeedback(Text.translatable("commands.skyblockcreator.deleted_island", playerEntity.getDisplayName()), false);
-=======
-                context.getSource().sendFeedback(new TranslatableText("commands.skyblockcreator.deleted_island", playerEntity.getDisplayName()), false);
->>>>>>> 1.18.2
                 return 1;
             })
             .then(CommandManager.argument("player", EntityArgumentType.player())
@@ -100,11 +82,7 @@ public class StructureWorldCommand {
                         } catch (NoIslandFound e) {
                             throw NO_ISLAND_FOR_UUID.create();
                         }
-<<<<<<< HEAD
                         context.getSource().sendFeedback(Text.translatable("commands.skyblockcreator.deleted_island", playerEntity.getDisplayName()), true);
-=======
-                        context.getSource().sendFeedback(new TranslatableText("commands.skyblockcreator.deleted_island", playerEntity.getDisplayName()), true);
->>>>>>> 1.18.2
                         return 1;
                     })
             );
@@ -123,11 +101,7 @@ public class StructureWorldCommand {
                 } catch (NoIslandFound noIsland) {
                     throw NO_ISLAND_FOR_UUID.create();
                 }
-<<<<<<< HEAD
                 context.getSource().sendFeedback(Text.translatable("commands.skyblockcreator.teleported_to_island", player.getDisplayName()), false);
-=======
-                context.getSource().sendFeedback(new TranslatableText("commands.skyblockcreator.teleported_to_island", player.getDisplayName()), false);
->>>>>>> 1.18.2
                 return 1;
             })
             .then(CommandManager.argument("player", EntityArgumentType.player())
@@ -143,11 +117,7 @@ public class StructureWorldCommand {
                         } catch (NoIslandFound noIsland) {
                             throw NO_ISLAND_FOR_UUID.create();
                         }
-<<<<<<< HEAD
                         context.getSource().sendFeedback(Text.translatable("commands.skyblockcreator.teleported_to_island", player.getDisplayName()), true);
-=======
-                        context.getSource().sendFeedback(new TranslatableText("commands.skyblockcreator.teleported_to_island", player.getDisplayName()), true);
->>>>>>> 1.18.2
                         return 1;
                     })
             );
