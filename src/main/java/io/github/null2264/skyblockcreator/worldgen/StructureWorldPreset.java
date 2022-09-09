@@ -54,7 +54,7 @@ public class StructureWorldPreset {
     }
 
     private static ChunkGenerator getNetherChunkGenerator(ModConfig.StructureWorldConfig structureWorldConfig) {
-        if (structureWorldConfig.getTheNetherConfig().voidMode()) {
+        if (structureWorldConfig.getTheNetherConfig().isVoidMode()) {
             return new StructureChunkGenerator(
                     BuiltinRegistries.STRUCTURE_SET,
                     "nether",
@@ -77,7 +77,7 @@ public class StructureWorldPreset {
     }
 
     private static ChunkGenerator getEndChunkGenerator(ModConfig.StructureWorldConfig structureWorldConfig) {
-        if (structureWorldConfig.getTheEndConfig().voidMode()) {
+        if (structureWorldConfig.getTheEndConfig().isVoidMode()) {
             return new StructureChunkGenerator(
                     BuiltinRegistries.STRUCTURE_SET,
                     "the_end",

@@ -54,8 +54,8 @@ public class ModConfig {
         private boolean topBedrockEnabled;
         private boolean bottomBedrockEnabled;
         private boolean isBedrockFlat;
-        private StructureDimensionConfig theEnd;
         private StructureDimensionConfig theNether;
+        private StructureDimensionConfig theEnd;
 
         public StructureWorldConfig(String structureIdentifier, String biomeIdentifier, int[] structureOffset, int[] playerSpawnOffset) {
             this.structureIdentifier = structureIdentifier;
@@ -67,8 +67,8 @@ public class ModConfig {
             this.topBedrockEnabled = false;
             this.bottomBedrockEnabled = false;
             this.isBedrockFlat = false;
-            this.theNether = new StructureDimensionConfig(false);
             this.theEnd = new StructureDimensionConfig(false);
+            this.theNether = new StructureDimensionConfig(false);
         }
 
         public StructureWorldConfig(String structureIdentifier, String biomeIdentifier, int[] structureOffset, int[] playerSpawnOffset, String fillmentBlockIdentifier, boolean topBedrockEnabled, boolean bottomBedrockEnabled) {
@@ -77,8 +77,8 @@ public class ModConfig {
             this.topBedrockEnabled = topBedrockEnabled;
             this.bottomBedrockEnabled = bottomBedrockEnabled;
             this.isBedrockFlat = false;
-            this.theNether = new StructureDimensionConfig(false);
             this.theEnd = new StructureDimensionConfig(false);
+            this.theNether = new StructureDimensionConfig(false);
         }
 
         public StructureDimensionConfig getTheEndConfig() {
@@ -132,7 +132,7 @@ public class ModConfig {
                 this.voidMode = voidMode;
             }
 
-            public boolean voidMode() {
+            public boolean isVoidMode() {
                 return voidMode;
             }
         }
