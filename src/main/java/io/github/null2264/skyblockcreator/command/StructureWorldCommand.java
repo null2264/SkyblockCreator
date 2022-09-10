@@ -16,8 +16,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.TranslatableText;
 
 public class StructureWorldCommand {
-    // TODO: Add team support
-
     private static final SimpleCommandExceptionType INVALID_CHUNK_GENERATOR = new SimpleCommandExceptionType(new TranslatableText("commands.skyblockcreator.invalid_chunk_generator"));
     private static final SimpleCommandExceptionType ISLAND_FOR_UUID_ALREADY_EXISTS = new SimpleCommandExceptionType(new TranslatableText("commands.skyblockcreator.island_for_uuid_already_exists"));
     private static final SimpleCommandExceptionType NO_ISLAND_FOR_UUID = new SimpleCommandExceptionType(new TranslatableText("commands.skyblockcreator.no_island_for_uuid"));
