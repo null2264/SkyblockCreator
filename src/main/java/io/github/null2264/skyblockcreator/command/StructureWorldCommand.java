@@ -8,6 +8,7 @@ import io.github.null2264.skyblockcreator.Mod;
 import io.github.null2264.skyblockcreator.error.AlreadyHaveIsland;
 import io.github.null2264.skyblockcreator.error.InvalidChunkGenerator;
 import io.github.null2264.skyblockcreator.error.NoIslandFound;
+import io.github.null2264.skyblockcreator.skyblock.SkyblockWorldState;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -26,9 +27,9 @@ public class StructureWorldCommand {
             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(Mod.CONFIG.getCreatePlatformPermissionLevel()))
             .executes(context -> {
                 ServerPlayerEntity playerEntity = context.getSource().getPlayer();
-                StructureWorldState structureWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
+                SkyblockWorldState skyblockWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(SkyblockWorldState::createFromNbt, SkyblockWorldState::new, "structureIslands");
                 try {
-                    structureWorldState.createIsland(context.getSource().getWorld(), playerEntity);
+                    skyblockWorldState.createIsland(context.getSource().getWorld(), playerEntity);
                 } catch (InvalidChunkGenerator e) {
                     throw INVALID_CHUNK_GENERATOR.create();
                 } catch (AlreadyHaveIsland e) {
@@ -41,9 +42,9 @@ public class StructureWorldCommand {
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .executes(context -> {
                         ServerPlayerEntity playerEntity = EntityArgumentType.getPlayer(context, "player");
-                        StructureWorldState structureWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
+                        SkyblockWorldState skyblockWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(SkyblockWorldState::createFromNbt, SkyblockWorldState::new, "structureIslands");
                         try {
-                            structureWorldState.createIsland(context.getSource().getWorld(), playerEntity);
+                            skyblockWorldState.createIsland(context.getSource().getWorld(), playerEntity);
                         } catch (InvalidChunkGenerator e) {
                             throw INVALID_CHUNK_GENERATOR.create();
                         } catch (AlreadyHaveIsland e) {
@@ -59,9 +60,9 @@ public class StructureWorldCommand {
             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(Mod.CONFIG.getCreatePlatformPermissionLevel()))
             .executes(context -> {
                 ServerPlayerEntity playerEntity = context.getSource().getPlayer();
-                StructureWorldState structureWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
+                SkyblockWorldState skyblockWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(SkyblockWorldState::createFromNbt, SkyblockWorldState::new, "structureIslands");
                 try {
-                    structureWorldState.deleteIsland(context.getSource().getWorld(), playerEntity);
+                    skyblockWorldState.deleteIsland(context.getSource().getWorld(), playerEntity);
                 } catch (InvalidChunkGenerator e) {
                     throw INVALID_CHUNK_GENERATOR.create();
                 } catch (NoIslandFound e) {
@@ -74,9 +75,9 @@ public class StructureWorldCommand {
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .executes(context -> {
                         ServerPlayerEntity playerEntity = EntityArgumentType.getPlayer(context, "player");
-                        StructureWorldState structureWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
+                        SkyblockWorldState skyblockWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(SkyblockWorldState::createFromNbt, SkyblockWorldState::new, "structureIslands");
                         try {
-                            structureWorldState.deleteIsland(context.getSource().getWorld(), playerEntity);
+                            skyblockWorldState.deleteIsland(context.getSource().getWorld(), playerEntity);
                         } catch (InvalidChunkGenerator e) {
                             throw INVALID_CHUNK_GENERATOR.create();
                         } catch (NoIslandFound e) {
@@ -91,11 +92,11 @@ public class StructureWorldCommand {
             .literal("teleport")
             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(Mod.CONFIG.getTeleportToPlatformPermissionLevel()))
             .executes(context -> {
-                StructureWorldState structureWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
+                SkyblockWorldState skyblockWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(SkyblockWorldState::createFromNbt, SkyblockWorldState::new, "structureIslands");
                 ServerPlayerEntity player = context.getSource().getPlayer();
 
                 try {
-                    structureWorldState.teleportToIsland(context.getSource().getWorld(), player);
+                    skyblockWorldState.teleportToIsland(context.getSource().getWorld(), player);
                 } catch (InvalidChunkGenerator invalidChunk) {
                     throw INVALID_CHUNK_GENERATOR.create();
                 } catch (NoIslandFound noIsland) {
@@ -107,11 +108,11 @@ public class StructureWorldCommand {
             .then(CommandManager.argument("player", EntityArgumentType.player())
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .executes(context -> {
-                        StructureWorldState structureWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(StructureWorldState::createFromNbt, StructureWorldState::new, "structureIslands");
+                        SkyblockWorldState skyblockWorldState = context.getSource().getWorld().getPersistentStateManager().getOrCreate(SkyblockWorldState::createFromNbt, SkyblockWorldState::new, "structureIslands");
                         ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
 
                         try {
-                            structureWorldState.teleportToIsland(context.getSource().getWorld(), context.getSource().getPlayer(), player);
+                            skyblockWorldState.teleportToIsland(context.getSource().getWorld(), context.getSource().getPlayer(), player);
                         } catch (InvalidChunkGenerator invalidChunk) {
                             throw INVALID_CHUNK_GENERATOR.create();
                         } catch (NoIslandFound noIsland) {

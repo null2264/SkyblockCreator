@@ -1,4 +1,4 @@
-package io.github.null2264.skyblockcreator.command;
+package io.github.null2264.skyblockcreator.skyblock;
 
 import io.github.null2264.skyblockcreator.Mod;
 import io.github.null2264.skyblockcreator.error.AlreadyHaveIsland;
@@ -19,13 +19,13 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class StructureWorldState extends PersistentState {
+public class SkyblockWorldState extends PersistentState {
 
-    private final HashMap<UUID, BlockPos> playerMap = new HashMap<>();
+    private final HashMap<UUID, Island> islandMap = new HashMap<>();
     private int x, y, dx, dy;
     private boolean spawnGenerated;
 
-    public StructureWorldState() {
+    public SkyblockWorldState() {
         this.x = Mod.CONFIG.getPlatformDistanceRadius();
         this.y = 0;
         this.dx = Mod.CONFIG.getPlatformDistanceRadius();
@@ -33,15 +33,26 @@ public class StructureWorldState extends PersistentState {
         this.spawnGenerated = false;
     }
 
-    public static StructureWorldState createFromNbt(NbtCompound tag) {
-        StructureWorldState state = new StructureWorldState();
-        state.playerMap.clear();
+    public static SkyblockWorldState createFromNbt(NbtCompound tag) {
+        SkyblockWorldState state = new SkyblockWorldState();
+        state.islandMap.clear();
+        NbtCompound islandsNbt = tag.getCompound("islands");
         NbtCompound playerMapTag = tag.getCompound("playerMap");
-        playerMapTag.getKeys().forEach(key -> {
+        if (!playerMapTag.isEmpty() && islandsNbt.isEmpty()) {
+            // Backwards compat
+            playerMapTag.getKeys().forEach(key -> {
+                try {
+                    UUID uuid = UUID.fromString(key);
+                    BlockPos pos = BlockPos.fromLong(playerMapTag.getLong(key));
+                    state.islandMap.put(uuid, new Island(uuid, pos));
+                } catch (IllegalArgumentException ignored) {
+                }
+            });
+        }
+        islandsNbt.getKeys().forEach(key -> {
             try {
                 UUID uuid = UUID.fromString(key);
-                BlockPos pos = BlockPos.fromLong(playerMapTag.getLong(key));
-                state.playerMap.put(uuid, pos);
+                state.islandMap.put(uuid, Island.fromNbt(islandsNbt.getCompound(key), uuid));
             } catch (IllegalArgumentException ignored) {
             }
         });
@@ -61,58 +72,58 @@ public class StructureWorldState extends PersistentState {
         if (isNotStructureWorld(world)) {
             throw new InvalidChunkGenerator();
         }
-        BlockPos islandPos = this.getIsland(playerEntity);
-        if (islandPos != null) {
+        Island island = this.getIsland(playerEntity);
+        if (island != null) {
             throw new AlreadyHaveIsland();
         }
-        islandPos = this.generateIsland(world, playerEntity);
+        island = this.generateIsland(world, playerEntity);
+        BlockPos islandPos = island.getPosition();
         playerEntity.teleport(islandPos.getX(), islandPos.getY(), islandPos.getZ());
     }
 
     public void deleteIsland(ServerPlayerEntity playerEntity) {
-        playerMap.remove(playerEntity.getUuid());
+        islandMap.remove(playerEntity.getUuid());
     }
 
     public void deleteIsland(ServerWorld world, ServerPlayerEntity playerEntity) throws InvalidChunkGenerator, NoIslandFound {
         if (isNotStructureWorld(world)) {
             throw new InvalidChunkGenerator();
         }
-        BlockPos islandPos = this.getIsland(playerEntity);
-        if (islandPos == null) {
+        Island island = this.getIsland(playerEntity);
+        if (island == null) {
             throw new NoIslandFound();
         }
         this.deleteIsland(playerEntity);
         this.teleportToIsland(world, playerEntity, Util.NIL_UUID);
     }
 
-    public BlockPos getSpawnIsland() {
-        return getIsland(Util.NIL_UUID);
+    public Island getSpawnIslandOrGenerate(ServerWorld world) {
+        Island island = getIsland(Util.NIL_UUID);
+        return island != null ? island : generateSpawnIsland(world);
     }
 
-    public BlockPos getIsland(ServerPlayerEntity playerEntity) {
+    public Island getIsland(ServerPlayerEntity playerEntity) {
         return getIsland(playerEntity.getUuid());
     }
 
-    public BlockPos getIsland(UUID id) {
-        return playerMap.get(id);
+    public Island getIsland(UUID id) {
+        return islandMap.get(id);
     }
 
-    public BlockPos generateIsland(ServerWorld world) {
-        BlockPos islandPos = generateIsland(world, Util.NIL_UUID);
-        this.spawnGenerated = true;
-        return islandPos;
+    public Island generateSpawnIsland(ServerWorld world) {
+        return generateIsland(world, Util.NIL_UUID);
     }
 
-    public BlockPos generateIsland(ServerWorld world, ServerPlayerEntity playerEntity) {
+    public Island generateIsland(ServerWorld world, ServerPlayerEntity playerEntity) {
         return generateIsland(world, playerEntity.getUuid());
     }
 
-    public BlockPos generateIsland(ServerWorld world, UUID uuid) {
+    public Island generateIsland(ServerWorld world, UUID islandId) {
         int x = this.x;
         int y = this.y;
         int dx = this.dx;
         int dy = this.dy;
-        if (!playerMap.containsKey(uuid)) {
+        if (!islandMap.containsKey(islandId)) {
             ChunkGenerator chunkGenerator = world.getChunkManager().getChunkGenerator();
             if (chunkGenerator instanceof StructureChunkGenerator structureChunkGenerator) {
                 Structure structure = Mod.STRUCTURES.get(structureChunkGenerator.getStructure());
@@ -120,10 +131,10 @@ public class StructureWorldState extends PersistentState {
                 BlockPos structureOffset = structureChunkGenerator.getStructureOffset();
 
                 BlockPos origin = new BlockPos(8, 64, 8);
-                BlockPos island;
+                BlockPos islandPos;
 
-                if (!uuid.equals(Util.NIL_UUID)) {
-                    island = origin.add(this.x, 0, this.y);
+                if (!islandId.equals(Util.NIL_UUID)) {
+                    islandPos = origin.add(this.x, 0, this.y);
                     if ((x == y) || (x < 0 && x == -y) || (x > 0 && x == Mod.CONFIG.getPlatformDistanceRadius() - y)) {
                         this.dx = -dy;
                         this.dy = dx;
@@ -131,26 +142,33 @@ public class StructureWorldState extends PersistentState {
                     this.x = x + this.dx;
                     this.y = y + this.dy;
                 } else {
-                    island = origin;
+                    islandPos = origin;
                 }
 
-                if (structure != null && !(uuid.equals(Util.NIL_UUID) && spawnGenerated))
-                    structure.place(world, island.add(structureOffset), island.add(structureOffset), new StructurePlacementData(), world.random, Block.NO_REDRAW);
-                playerMap.put(uuid, island.add(playerSpawnOffset));
+                if (structure != null)
+                    structure.place(world, islandPos.add(structureOffset), islandPos.add(structureOffset), new StructurePlacementData(), world.random, Block.NO_REDRAW);
+
+                Island newIsland = new Island(islandId, islandPos.add(playerSpawnOffset));
+                islandMap.put(islandId, newIsland);
+
             } else {
-                playerMap.put(uuid, BlockPos.ORIGIN);
+                islandMap.put(islandId, new Island(islandId, BlockPos.ORIGIN));
             }
             markDirty();
         }
-        return playerMap.get(uuid);
+        return islandMap.get(islandId);
     }
 
     public void teleportToIsland(ServerWorld world, ServerPlayerEntity player) throws InvalidChunkGenerator, NoIslandFound {
-        teleportToIsland(world, player, player);
+        teleportToIsland(world, player, player, false);
     }
 
     public void teleportToIsland(ServerWorld world, ServerPlayerEntity player, ServerPlayerEntity owner) throws InvalidChunkGenerator, NoIslandFound {
-        teleportToIsland(world, player, owner.getUuid());
+        teleportToIsland(world, player, owner, false);
+    }
+
+    public void teleportToIsland(ServerWorld world, ServerPlayerEntity player, ServerPlayerEntity owner, Boolean forceTeleport) throws InvalidChunkGenerator, NoIslandFound {
+        teleportToIsland(world, player, owner.getUuid(), forceTeleport);
     }
 
     public void teleportToIsland(ServerWorld world, ServerPlayerEntity player, UUID uuid) throws InvalidChunkGenerator, NoIslandFound {
@@ -161,27 +179,25 @@ public class StructureWorldState extends PersistentState {
         if (isNotStructureWorld(world) && !uuid.equals(Util.NIL_UUID)) {
             throw new InvalidChunkGenerator();
         }
-        BlockPos islandPos = this.getIsland(uuid);
-        if (islandPos == null) {
+
+        Island island = this.getIsland(uuid);
+        if (island == null) {
             if (!uuid.equals(Util.NIL_UUID) && !forceTeleport)
                 throw new NoIslandFound();
             else {
-                BlockPos spawnIsland = this.getSpawnIsland();
-                islandPos = spawnIsland != null ? spawnIsland : this.generateIsland(world);
+                island = this.getSpawnIslandOrGenerate(world);
             }
         }
 
-        if (forceTeleport)
-            player.setPosition(islandPos.getX(), islandPos.getY(), islandPos.getZ());
-        else
-            player.teleport(islandPos.getX(), islandPos.getY(), islandPos.getZ());
+        BlockPos islandPos = island.getPosition();
+        player.requestTeleport(islandPos.getX(), islandPos.getY(), islandPos.getZ());
     }
 
     @Override
     public NbtCompound writeNbt(NbtCompound tag) {
-        NbtCompound playerMapTag = new NbtCompound();
-        playerMap.forEach((uuid, blockPos) -> playerMapTag.putLong(uuid.toString(), blockPos.asLong()));
-        tag.put("playerMap", playerMapTag);
+        NbtCompound islandsNbt = new NbtCompound();
+        islandMap.forEach((uuid, island) -> islandsNbt.put(uuid.toString(), island.toNbt()));
+        tag.put("islands", islandsNbt);
         tag.putInt("x", x);
         tag.putInt("y", y);
         tag.putInt("dx", dx);
