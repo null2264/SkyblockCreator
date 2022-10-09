@@ -28,7 +28,7 @@ import java.util.List;
 public class Mod implements ModInitializer {
 
     public static final String MOD_ID = "skyblockcreator";
-    public static final Logger LOGGER = LogManager.getLogger("Structure World");
+    public static final Logger LOGGER = LogManager.getLogger("Skyblock Creator");
     public static final HashMap<String, Structure> STRUCTURES = Maps.newHashMap();
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static ModConfig CONFIG;

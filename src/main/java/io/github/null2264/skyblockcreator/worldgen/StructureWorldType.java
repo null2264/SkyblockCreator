@@ -1,14 +1,8 @@
 package io.github.null2264.skyblockcreator.worldgen;
 
 import com.mojang.serialization.Lifecycle;
-import io.github.null2264.skyblockcreator.Mod;
-import io.github.null2264.skyblockcreator.core.ModClient;
 import io.github.null2264.skyblockcreator.core.ModConfig;
-import io.github.null2264.skyblockcreator.mixin.GeneratorTypeAccessor;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.world.GeneratorType;
 import net.minecraft.structure.StructureSet;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
@@ -32,35 +26,6 @@ public class StructureWorldType {
 
     public StructureWorldType(ModConfig.StructureWorldConfig structureWorldConfig) {
         this.structureWorldConfig = structureWorldConfig;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public static void register() {
-        Mod.CONFIG.getStructureWorldConfigs().forEach(structureWorldConfig -> {
-            String structure = structureWorldConfig.getStructureIdentifier();
-            StructureWorldType worldType = new StructureWorldType(structureWorldConfig);
-            GeneratorType generatorType = new GeneratorType(Mod.MOD_ID + "." + structureWorldConfig.getStructureIdentifier()) {
-                @Override
-                public GeneratorOptions createDefaultOptions(DynamicRegistryManager registryManager, long seed, boolean generateStructures, boolean bonusChest) {
-                    return worldType.createDefaultOptions(registryManager, seed, generateStructures, bonusChest);
-                }
-
-                @Override
-                protected ChunkGenerator getChunkGenerator(DynamicRegistryManager registryManager, long seed) {
-                    return worldType.getOverworldChunkGenerator(registryManager);
-                }
-            };
-
-            if (structureWorldConfig.isOverridingDefault()) {
-                GeneratorTypeAccessor.getValues().add(0, generatorType);
-                ModClient.OVERRIDED_GENERATOR_TYPE = generatorType;
-                Mod.LOGGER.info("Successfully registered " + structure + " generator type. (Overriding default)");
-            } else {
-                GeneratorTypeAccessor.getValues().add(generatorType);
-                Mod.LOGGER.info("Successfully registered " + structure + " generator type.");
-            }
-
-        });
     }
 
     public GeneratorOptions createDefaultOptions(DynamicRegistryManager registryManager, long seed, boolean generateStructures, boolean bonusChest) {
