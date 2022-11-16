@@ -6,6 +6,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.util.registry.RegistryKeys;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.FixedBiomeSource;
 import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
@@ -39,7 +40,7 @@ public class StructureWorldPreset {
     }
 
     private static ChunkGenerator getOverworldChunkGenerator(ModConfig.StructureWorldConfig structureWorldConfig) {
-        RegistryKey<Biome> biomeKey = RegistryKey.of(Registry.BIOME_KEY, new Identifier(structureWorldConfig.getBiomeIdentifier()));
+        RegistryKey<Biome> biomeKey = RegistryKey.of(RegistryKeys.BIOME, new Identifier(structureWorldConfig.getBiomeIdentifier()));
         return new StructureChunkGenerator(
                 BuiltinRegistries.STRUCTURE_SET,
                 new FixedBiomeSource(BuiltinRegistries.BIOME.getOrCreateEntry(biomeKey)),
