@@ -6,10 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.structure.StructureSet;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
-import net.minecraft.util.registry.DynamicRegistryManager;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.util.registry.SimpleRegistry;
+import net.minecraft.util.registry.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.FixedBiomeSource;
 import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
@@ -29,12 +26,12 @@ public class StructureWorldType {
     }
 
     public GeneratorOptions createDefaultOptions(DynamicRegistryManager registryManager, long seed, boolean generateStructures, boolean bonusChest) {
-        Registry<Biome> biome = registryManager.get(Registry.BIOME_KEY);
-        Registry<StructureSet> structureSets = registryManager.get(Registry.STRUCTURE_SET_KEY);
-        Registry<ChunkGeneratorSettings> chunkGeneratorSettings = registryManager.get(Registry.CHUNK_GENERATOR_SETTINGS_KEY);
+        Registry<Biome> biome = registryManager.get(RegistryKeys.BIOME);
+        Registry<StructureSet> structureSets = registryManager.get(RegistryKeys.STRUCTURE_SET);
+        Registry<ChunkGeneratorSettings> chunkGeneratorSettings = registryManager.get(RegistryKeys.CHUNK_GENERATOR_SETTINGS);
         Registry<DoublePerlinNoiseSampler.NoiseParameters> worldGenNoise = registryManager.get(Registry.NOISE_WORLDGEN);
-        Registry<DimensionType> dimensionRegistry = registryManager.get(Registry.DIMENSION_TYPE_KEY);
-        SimpleRegistry<DimensionOptions> registry = new SimpleRegistry<>(Registry.DIMENSION_KEY, Lifecycle.stable(), null);
+        Registry<DimensionType> dimensionRegistry = registryManager.get(RegistryKeys.DIMENSION_TYPE);
+        SimpleRegistry<DimensionOptions> registry = new SimpleRegistry<>(RegistryKeys.DIMENSION, Lifecycle.stable(), null);
 
         registry.add(DimensionOptions.OVERWORLD, new DimensionOptions(
                         dimensionRegistry.getOrCreateEntry(DimensionType.OVERWORLD_REGISTRY_KEY),
@@ -61,9 +58,9 @@ public class StructureWorldType {
     }
 
     public ChunkGenerator getOverworldChunkGenerator(DynamicRegistryManager registryManager) {
-        RegistryKey<Biome> biomeKey = RegistryKey.of(Registry.BIOME_KEY, new Identifier(structureWorldConfig.getBiomeIdentifier()));
-        Registry<StructureSet> structureSetRegistry = registryManager.get(Registry.STRUCTURE_SET_KEY);
-        Registry<Biome> biomeRegistry = registryManager.get(Registry.BIOME_KEY);
+        RegistryKey<Biome> biomeKey = RegistryKey.of(RegistryKeys.BIOME, new Identifier(structureWorldConfig.getBiomeIdentifier()));
+        Registry<StructureSet> structureSetRegistry = registryManager.get(RegistryKeys.STRUCTURE_SET);
+        Registry<Biome> biomeRegistry = registryManager.get(RegistryKeys.BIOME);
         BlockState fillmentBlockState = Registry.BLOCK.get(new Identifier(structureWorldConfig.getFillmentBlockIdentifier())).getDefaultState();
         return new StructureChunkGenerator(
                 structureSetRegistry,

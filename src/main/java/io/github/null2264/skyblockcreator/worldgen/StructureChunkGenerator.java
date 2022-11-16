@@ -9,6 +9,7 @@ import net.minecraft.util.dynamic.RegistryOps;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryEntryList;
+import net.minecraft.util.registry.RegistryKeys;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
@@ -36,7 +37,7 @@ public class StructureChunkGenerator extends ChunkGenerator {
 
     public static final Codec<StructureChunkGenerator> CODEC = RecordCodecBuilder.create((instance) ->
             instance.group(
-                    RegistryOps.createRegistryCodec(Registry.STRUCTURE_SET_KEY).forGetter((chunkGenerator) -> chunkGenerator.field_37053),
+                    RegistryOps.createRegistryCodec(RegistryKeys.STRUCTURE_SET).forGetter((chunkGenerator) -> chunkGenerator.field_37053),
                     Codec.STRING.stable().fieldOf("dimension").forGetter((generator) -> generator.dimension),
                     BiomeSource.CODEC.fieldOf("biome_source").forGetter((generator) -> generator.biomeSource),
                     Codec.STRING.stable().fieldOf("structure").forGetter((generator) -> generator.structure),
