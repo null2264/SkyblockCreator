@@ -7,17 +7,25 @@ import com.google.gson.JsonParser;
 import io.github.null2264.skyblockcreator.command.StructureWorldCommand;
 import io.github.null2264.skyblockcreator.core.ModConfig;
 import io.github.null2264.skyblockcreator.worldgen.StructureChunkGenerator;
-import io.github.null2264.skyblockcreator.worldgen.StructureWorldPreset;
+import io.github.null2264.skyblockcreator.worldgen.StructureWorldPresets;
+import lv.cebbys.mcmods.respro.api.ResproRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.SharedConstants;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.structure.StructureTemplate;
+import net.minecraft.structure.StructureTemplateManager;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.dimension.DimensionTypes;
 import net.minecraft.world.gen.WorldPreset;
+import net.minecraft.world.gen.chunk.ChunkGenerator;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,29 +33,30 @@ import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Mod implements ModInitializer {
 
     public static final String MOD_ID = "skyblockcreator";
     public static final Logger LOGGER = LogManager.getLogger("Structure World");
-    public static final HashMap<String, StructureTemplate> STRUCTURES = Maps.newHashMap();
+    public static final HashMap<String, NbtCompound> STRUCTURES = Maps.newHashMap();
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static ModConfig CONFIG;
     public static List<RegistryKey<WorldPreset>> TO_BE_DISPLAYED = List.of();
     public static String OVERRIDED_LEVEL_TYPE = null;
     public static Path configPath = Path.of(FabricLoader.getInstance().getConfigDir() + File.separator + MOD_ID);
 
+    public static Identifier identifierOf(String path) {
+        return new Identifier(MOD_ID, path);
+    }
+
     public static RegistryKey<WorldPreset> registryKeyOf(String id) {
-        return RegistryKey.of(Registry.WORLD_PRESET_KEY, new Identifier(MOD_ID, id));
+        return RegistryKey.of(RegistryKeys.WORLD_PRESET, identifierOf(id));
     }
 
     @Override
     public void onInitialize() {
-        Registry.register(Registry.CHUNK_GENERATOR, new Identifier(MOD_ID, "structure_chunk_generator"), StructureChunkGenerator.CODEC);
+        Registry.register(Registries.CHUNK_GENERATOR, identifierOf("structure_chunk_generator"), StructureChunkGenerator.CODEC);
         File structuresFolder = new File(configPath + File.separator + "structures");
         File configFile = new File(Mod.configPath + File.separator + MOD_ID + ".json");
 
@@ -78,9 +87,7 @@ public class Mod implements ModInitializer {
                     FileInputStream fileInputStream = new FileInputStream(file);
                     DataInputStream dataInputStream = new DataInputStream(fileInputStream);
                     NbtCompound structure = NbtIo.readCompressed(dataInputStream);
-                    StructureTemplate loadedStructure = new StructureTemplate();
-                    loadedStructure.readNbt(structure);
-                    STRUCTURES.put(file.getName().replace(".nbt", ""), loadedStructure);
+                    STRUCTURES.put(file.getName().replace(".nbt", ""), structure);
                 }
                 LOGGER.info("Successfully loaded structures folder with " + STRUCTURES.size() + " structure.");
             }
@@ -114,11 +121,9 @@ public class Mod implements ModInitializer {
             LOGGER.warn("Defaulting to original config with " + CONFIG.getStructureWorldConfigs().size() + " custom structure worlds.");
         }
 
-        LOGGER.info("Trying to register structures to world presets...");
-        StructureWorldPreset.register();
+        StructureWorldPresets.register();
 
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, env) -> StructureWorldCommand.register(dispatcher)));
-
     }
 
 }

@@ -19,3 +19,7 @@ pluginManagement {
         id ("com.modrinth.minotaur") version settings["modrinth_version"]
     }
 }
+
+rootProject.name = "SkyblockCreator"
+
+include("Respro")

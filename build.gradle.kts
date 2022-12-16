@@ -8,6 +8,10 @@ import com.matthewprenger.cursegradle.Options
 import com.modrinth.minotaur.TaskModrinthUpload
 import com.modrinth.minotaur.request.VersionType
 
+operator fun Project.get(property: String): String {
+    return property(property) as String
+}
+
 buildscript {
     dependencies {
         classpath("org.kohsuke:github-api:${project.property("github_api_version") as String}")
@@ -29,17 +33,55 @@ plugins {
     id("com.modrinth.minotaur")
 }
 
-operator fun Project.get(property: String): String {
-    return property(property) as String
-}
 
-configure<JavaPluginExtension> {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-
-version = "${project["mod_version"]}+${project["supported_version"]}"
 group = project["maven_group"]
+
+allprojects {
+    version = "${project["mod_version"]}+${project["supported_version"]}"
+
+    apply {
+        plugin("fabric-loom")
+        plugin("maven-publish")
+    }
+
+    configure<JavaPluginExtension> {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    // Shared deps between SkyblockCreator and Respro
+    dependencies {
+        minecraft("com.mojang:minecraft:${project["minecraft_version"]}")
+        mappings("net.fabricmc:yarn:${project["yarn_mappings"]}:v2")
+
+        modImplementation("net.fabricmc:fabric-loader:${project["loader_version"]}")
+        modImplementation("net.fabricmc.fabric-api:fabric-api:${project["fabric_version"]}")
+    }
+
+    tasks.processResources {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
+        inputs.property("version", project.version)
+
+        from(sourceSets.main.get().resources.srcDirs) {
+            include("fabric.mod.json")
+            expand(mutableMapOf("version" to project.version))
+        }
+
+        from(sourceSets.main.get().resources.srcDirs) {
+            exclude("fabric.mod.json")
+        }
+    }
+
+    tasks.withType<JavaCompile> {
+        options.encoding = "UTF-8"
+        options.release.set(16)
+    }
+
+    java {
+        withSourcesJar()
+    }
+}
 
 val environment: Map<String, String> = System.getenv()
 val versionSplit = (version as String).split("+")
@@ -71,7 +113,11 @@ loom {
 }
 
 repositories {
-    maven("https://maven.nucleoid.xyz")
+    // for server translation
+    maven {
+        url = uri("https://maven.nucleoid.xyz")
+    }
+    // for Fabric API
     maven {
         name = "Fabric"
         url = uri("https://maven.fabricmc.net/")
@@ -79,48 +125,40 @@ repositories {
     mavenLocal()
 }
 
+/*
+allprojects {
+    loom {
+        mods {
+            named("respro") {
+                sourceSet(project(":Respro").sourceSets["main"])
+                sourceSet(project(":Respro").sourceSets["test"])
+            }
+            named("skyblockcreator") {
+                sourceSet(project(":").sourceSets["main"])
+            }
+        }
+    }
+}
+ */
+
 dependencies {
-    minecraft("com.mojang:minecraft:${project["minecraft_version"]}")
-    mappings("net.fabricmc:yarn:${project["yarn_mappings"]}:v2")
 
     "fr.catcore:server-translations-api:${project["server_translation"]}".apply {
         include(this)
         modImplementation(this)
     }
 
-    modImplementation("net.fabricmc:fabric-loader:${project["loader_version"]}")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project["fabric_version"]}")
-}
-
-tasks.processResources {
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
-
-    inputs.property("version", project.version)
-
-    from(sourceSets["main"].resources.srcDirs) {
-        include("fabric.mod.json")
-        expand(mutableMapOf("version" to project.version))
+    ":Respro".apply {
+        implementation(project(this, "namedElements"))
+        include(project(this))
     }
-
-    from(sourceSets["main"].resources.srcDirs) {
-        exclude("fabric.mod.json")
-    }
-}
-
-tasks.withType<JavaCompile> {
-    options.encoding = "UTF-8"
-    options.release.set(16)
-}
-
-java {
-    withSourcesJar()
 }
 
 tasks.jar {
-    from("LICENSE")
+    from("COPYING.md")
 }
 
-//Github publishing
+// GitHub publishing
 task("github") {
     dependsOn(tasks.remapJar)
     group = "upload"
@@ -141,7 +179,7 @@ task("github") {
     }
 }
 
-//Curseforge publishing
+// CurseForge publishing
 curseforge {
     environment["CURSEFORGE_API_KEY"]?.let { apiKey = it }
 
@@ -170,7 +208,7 @@ curseforge {
     })
 }
 
-//Modrinth publishing
+// Modrinth publishing
 task<TaskModrinthUpload>("modrinth") {
     dependsOn(tasks.remapJar)
     group = "upload"

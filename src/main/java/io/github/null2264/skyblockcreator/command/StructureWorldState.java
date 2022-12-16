@@ -7,6 +7,8 @@ import io.github.null2264.skyblockcreator.error.NoIslandFound;
 import io.github.null2264.skyblockcreator.worldgen.StructureChunkGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryEntryLookup;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
@@ -115,7 +117,8 @@ public class StructureWorldState extends PersistentState {
         if (!playerMap.containsKey(uuid)) {
             ChunkGenerator chunkGenerator = world.getChunkManager().getChunkGenerator();
             if (chunkGenerator instanceof StructureChunkGenerator structureChunkGenerator) {
-                StructureTemplate structure = Mod.STRUCTURES.get(structureChunkGenerator.getStructure());
+                RegistryEntryLookup<Block> blockLookup = world.getRegistryManager().get(RegistryKeys.BLOCK).getReadOnlyWrapper();
+                NbtCompound structureTemplateNbt = Mod.STRUCTURES.get(structureChunkGenerator.getStructure());
                 BlockPos playerSpawnOffset = structureChunkGenerator.getPlayerSpawnOffset();
                 BlockPos structureOffset = structureChunkGenerator.getStructureOffset();
 
@@ -134,8 +137,11 @@ public class StructureWorldState extends PersistentState {
                     island = origin;
                 }
 
-                if (structure != null && !(uuid.equals(Util.NIL_UUID) && spawnGenerated))
-                    structure.place(world, island.add(structureOffset), island.add(structureOffset), new StructurePlacementData(), world.random, Block.NO_REDRAW);
+                if (structureTemplateNbt != null && !(uuid.equals(Util.NIL_UUID) && spawnGenerated)) {
+                    StructureTemplate structureTemplate = new StructureTemplate();
+                    structureTemplate.readNbt(blockLookup, structureTemplateNbt);
+                    structureTemplate.place(world, island.add(structureOffset), island.add(structureOffset), new StructurePlacementData(), world.random, Block.NO_REDRAW);
+                }
                 playerMap.put(uuid, island.add(playerSpawnOffset));
             } else {
                 playerMap.put(uuid, BlockPos.ORIGIN);

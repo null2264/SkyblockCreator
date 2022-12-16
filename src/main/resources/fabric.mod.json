@@ -24,7 +24,6 @@
     "main": [
       "io.github.null2264.skyblockcreator.Mod"
     ],
-    "client": [],
     "server": [
       "io.github.null2264.skyblockcreator.core.ModServer"
     ]
