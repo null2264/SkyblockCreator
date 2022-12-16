@@ -6,7 +6,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public abstract class AbstractStringResource extends AbstractResource {
+public abstract class AbstractStringResource extends AbstractResource
+{
     public abstract @NotNull("AbstractStringResource content is null") String getAsString();
 
     @Override

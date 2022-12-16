@@ -24,7 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class ResproBuilders {
+public class ResproBuilders
+{
     private static final Logger LOGGER = LoggerFactory.getLogger(ResproBuilders.class);
     private static final BuilderMap BUILDERS = new BuilderMap();
 
@@ -71,7 +72,11 @@ public class ResproBuilders {
         registerBuilderSupplier(clazz, () -> new SimpleResourceBuilder<>(resourceSupplier));
     }
 
-    private static class BuilderMap {
+    private interface RS<I, R extends AbstractResource> extends Supplier<ResourceBuilder<I, R>>
+    {}
+
+    private static class BuilderMap
+    {
         private final Map<Class<?>, Pair<Integer, Supplier<?>>> map = new HashMap<>();
 
         public <I, A extends ResourceBuilder<I, ?>> void set(@NotNull Class<I> key, int priority, @NotNull Supplier<A> value) {
@@ -86,8 +91,5 @@ public class ResproBuilders {
             if (!map.containsKey(key)) return null;
             return (Supplier<A>) map.get(key).getValue();
         }
-    }
-
-    private interface RS<I, R extends AbstractResource> extends Supplier<ResourceBuilder<I, R>> {
     }
 }

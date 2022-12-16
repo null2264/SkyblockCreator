@@ -16,7 +16,8 @@ import java.util.concurrent.Executors;
 import static lv.cebbys.mcmods.respro.constant.ResproConstants.RESPRO_PACK_ICON_LOCATION;
 import static lv.cebbys.mcmods.respro.constant.ResproConstants.RESPRO_PACK_MCMETA_LOCATION;
 
-public class ResproPackDump {
+public class ResproPackDump
+{
     private static final Logger LOGGER = LoggerFactory.getLogger(ResproPackDump.class);
     private static final Executor EXECUTOR = Executors.newSingleThreadExecutor();
 

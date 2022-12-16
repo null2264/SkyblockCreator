@@ -6,7 +6,8 @@ import lv.cebbys.mcmods.respro.utility.ResourceUtils;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ResourceCollector<T extends BinaryResource> {
+public class ResourceCollector<T extends BinaryResource>
+{
 
     protected final List<T> resources = new LinkedList<>();
     private final Class<T> resourceType;

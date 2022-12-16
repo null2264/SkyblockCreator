@@ -1,10 +1,8 @@
 package lv.cebbys.mcmods.respro.component.resource.string.worldgen;
 
 import lv.cebbys.mcmods.respro.api.initializer.worldgen.WorldPresetsResourceInitializer;
-import lv.cebbys.mcmods.respro.api.initializer.worldgen.worldpreset.DimensionResourceInitializer;
 import lv.cebbys.mcmods.respro.component.mapper.JsonPart;
 import lv.cebbys.mcmods.respro.component.resource.AbstractJsonObjectResource;
-import lv.cebbys.mcmods.respro.component.resource.string.worldgen.worldpreset.DimensionResource;
 import lv.cebbys.mcmods.respro.exception.ResourceValidationException;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;

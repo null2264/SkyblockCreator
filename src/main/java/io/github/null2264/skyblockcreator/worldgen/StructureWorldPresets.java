@@ -4,7 +4,6 @@ import io.github.null2264.skyblockcreator.Mod;
 import lv.cebbys.mcmods.respro.api.ResproRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
@@ -40,47 +39,44 @@ public class StructureWorldPresets
             Mod.CONFIG.getStructureWorldConfigs().forEach(config -> {
                 String structure = config.getStructureIdentifier();
                 Identifier worldPresetId = identifierOf(structure);
-                data.setWorldPreset(
-                        worldPresetId, worldPreset -> {
-                            worldPreset.setDimensions(dim -> {
-                                dim.setFromRegistry(DimensionTypes.OVERWORLD);
-                                dim.setChunkGenerator(chunkGenerator -> {
-                                    chunkGenerator.setFromCodec(StructureChunkGenerator.CODEC);
-                                    chunkGenerator.setStructureChunkValues(config.getPlayerSpawnOffset(), config.getStructureOffset(), structure, new Identifier(config.getFillmentBlockIdentifier()), config.isTopBedrockEnabled(), config.isBottomBedrockEnabled(), config.isBedrockFlat());
-                                    chunkGenerator.setBiomeSource(biomeSource -> biomeSource.setFromCodec(FixedBiomeSource.CODEC, new Identifier(config.getBiomeIdentifier())));
-                                });
-                            });
+                data.setWorldPreset(worldPresetId, worldPreset -> {
+                    worldPreset.setDimensions(dim -> {
+                        dim.setFromRegistry(DimensionTypes.OVERWORLD);
+                        dim.setChunkGenerator(chunkGenerator -> {
+                            chunkGenerator.setFromCodec(StructureChunkGenerator.CODEC);
+                            chunkGenerator.setStructureChunkValues(config.getPlayerSpawnOffset(), config.getStructureOffset(), structure, new Identifier(config.getFillmentBlockIdentifier()), config.isTopBedrockEnabled(), config.isBottomBedrockEnabled(), config.isBedrockFlat());
+                            chunkGenerator.setBiomeSource(biomeSource -> biomeSource.setFromCodec(FixedBiomeSource.CODEC, new Identifier(config.getBiomeIdentifier())));
+                        });
+                    });
 
-                            worldPreset.setDimensions(dim -> {
-                                dim.setFromRegistry(DimensionTypes.THE_NETHER);
-                                dim.setChunkGenerator(chunkGenerator -> {
-                                    if (config.getTheNetherConfig().isVoidMode()) {
-                                        chunkGenerator.setFromCodec(StructureChunkGenerator.CODEC);
-                                        chunkGenerator.setStructureChunkValues(config.getPlayerSpawnOffset(), config.getStructureOffset(), structure, Identifier.of("minecraft", "air"), config.isTopBedrockEnabled(), config.isBottomBedrockEnabled(), config.isBedrockFlat());
-                                    } else {
-                                        chunkGenerator.setFromCodec(NoiseChunkGenerator.CODEC, ChunkGeneratorSettings.NETHER);
-                                    }
-                                    chunkGenerator.setBiomeSource(biomeSource -> biomeSource.setFromCodec(MultiNoiseBiomeSource.CODEC, MultiNoiseBiomeSource.Preset.NETHER));
-                                });
-                            });
+                    worldPreset.setDimensions(dim -> {
+                        dim.setFromRegistry(DimensionTypes.THE_NETHER);
+                        dim.setChunkGenerator(chunkGenerator -> {
+                            if (config.getTheNetherConfig().isVoidMode()) {
+                                chunkGenerator.setFromCodec(StructureChunkGenerator.CODEC);
+                                chunkGenerator.setStructureChunkValues(config.getPlayerSpawnOffset(), config.getStructureOffset(), structure, Identifier.of("minecraft", "air"), config.isTopBedrockEnabled(), config.isBottomBedrockEnabled(), config.isBedrockFlat());
+                            } else {
+                                chunkGenerator.setFromCodec(NoiseChunkGenerator.CODEC, ChunkGeneratorSettings.NETHER);
+                            }
+                            chunkGenerator.setBiomeSource(biomeSource -> biomeSource.setFromCodec(MultiNoiseBiomeSource.CODEC, MultiNoiseBiomeSource.Preset.NETHER));
+                        });
+                    });
 
-                            worldPreset.setDimensions(dim -> {
-                                dim.setFromRegistry(DimensionTypes.THE_END);
-                                dim.setChunkGenerator(chunkGenerator -> {
-                                    if (config.getTheEndConfig().isVoidMode()) {
-                                        chunkGenerator.setFromCodec(StructureChunkGenerator.CODEC);
-                                        chunkGenerator.setStructureChunkValues(config.getPlayerSpawnOffset(), config.getStructureOffset(), structure, Identifier.of("minecraft", "air"), config.isTopBedrockEnabled(), config.isBottomBedrockEnabled(), config.isBedrockFlat());
-                                    } else {
-                                        chunkGenerator.setFromCodec(NoiseChunkGenerator.CODEC, ChunkGeneratorSettings.END);
-                                    }
-                                    chunkGenerator.setBiomeSource(biomeSource -> biomeSource.setFromCodec(TheEndBiomeSource.CODEC));
-                                });
-                            });
-                        }
-                );
+                    worldPreset.setDimensions(dim -> {
+                        dim.setFromRegistry(DimensionTypes.THE_END);
+                        dim.setChunkGenerator(chunkGenerator -> {
+                            if (config.getTheEndConfig().isVoidMode()) {
+                                chunkGenerator.setFromCodec(StructureChunkGenerator.CODEC);
+                                chunkGenerator.setStructureChunkValues(config.getPlayerSpawnOffset(), config.getStructureOffset(), structure, Identifier.of("minecraft", "air"), config.isTopBedrockEnabled(), config.isBottomBedrockEnabled(), config.isBedrockFlat());
+                            } else {
+                                chunkGenerator.setFromCodec(NoiseChunkGenerator.CODEC, ChunkGeneratorSettings.END);
+                            }
+                            chunkGenerator.setBiomeSource(biomeSource -> biomeSource.setFromCodec(TheEndBiomeSource.CODEC));
+                        });
+                    });
+                });
                 toBeDisplayed.add(Mod.registryKeyOf(structure));
-                if (config.isOverridingDefault())
-                    Mod.OVERRIDED_LEVEL_TYPE = worldPresetId.getPath();
+                if (config.isOverridingDefault()) Mod.OVERRIDED_LEVEL_TYPE = worldPresetId.getPath();
                 Mod.LOGGER.info("Successfully registered " + structure + " world type.");
             });
             Mod.TO_BE_DISPLAYED = toBeDisplayed;

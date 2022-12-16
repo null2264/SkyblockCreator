@@ -7,7 +7,8 @@ import net.minecraft.resource.ResourceType;
 import net.minecraft.util.InvalidIdentifierException;
 import org.jetbrains.annotations.NotNull;
 
-public final class StringResource extends AbstractStringResource implements StringResourceInitializer {
+public final class StringResource extends AbstractStringResource implements StringResourceInitializer
+{
     private String content;
 
     public StringResource(@NotNull String textContent) {

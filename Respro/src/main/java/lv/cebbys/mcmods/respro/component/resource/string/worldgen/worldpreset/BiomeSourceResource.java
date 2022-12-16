@@ -7,14 +7,11 @@ import lv.cebbys.mcmods.respro.component.resource.AbstractJsonObjectResource;
 import lv.cebbys.mcmods.respro.exception.ResourceValidationException;
 import lv.cebbys.mcmods.respro.utility.access.MultiNoiseBiomeSourcePresetAccess;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 public class BiomeSourceResource extends AbstractJsonObjectResource implements BiomeSourceResourceInitializer
 {

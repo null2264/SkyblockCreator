@@ -8,24 +8,17 @@ import io.github.null2264.skyblockcreator.command.StructureWorldCommand;
 import io.github.null2264.skyblockcreator.core.ModConfig;
 import io.github.null2264.skyblockcreator.worldgen.StructureChunkGenerator;
 import io.github.null2264.skyblockcreator.worldgen.StructureWorldPresets;
-import lv.cebbys.mcmods.respro.api.ResproRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.SharedConstants;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.structure.StructureTemplate;
-import net.minecraft.structure.StructureTemplateManager;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.dimension.DimensionTypes;
 import net.minecraft.world.gen.WorldPreset;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,9 +26,13 @@ import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
-public class Mod implements ModInitializer {
+public class Mod implements ModInitializer
+{
 
     public static final String MOD_ID = "skyblockcreator";
     public static final Logger LOGGER = LogManager.getLogger("Structure World");

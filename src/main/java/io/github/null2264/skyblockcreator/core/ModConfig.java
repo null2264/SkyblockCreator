@@ -6,13 +6,10 @@ import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
-public class ModConfig {
+public class ModConfig
+{
 
-    private final List<StructureWorldConfig> structureWorldConfigs = Arrays.asList(
-            new StructureWorldConfig("simple_tree", "minecraft:forest", new int[]{-2, 0, -2}, new int[]{0, 8, 0}),
-            new StructureWorldConfig("classic_skyblock", "minecraft:plains", new int[]{-3, 0, -1}, new int[]{0, 3, 0}),
-            new StructureWorldConfig("stoneblock", "minecraft:plains", new int[]{-5, -2, -5}, new int[]{0, 0, 0}, "minecraft:stone", true, true)
-    );
+    private final List<StructureWorldConfig> structureWorldConfigs = Arrays.asList(new StructureWorldConfig("simple_tree", "minecraft:forest", new int[]{-2, 0, -2}, new int[]{0, 8, 0}), new StructureWorldConfig("classic_skyblock", "minecraft:plains", new int[]{-3, 0, -1}, new int[]{0, 3, 0}), new StructureWorldConfig("stoneblock", "minecraft:plains", new int[]{-5, -2, -5}, new int[]{0, 0, 0}, "minecraft:stone", true, true));
     private int createPlatformPermissionLevel = 0;
     private int teleportToPlatformPermissionLevel = 0;
     private int platformDistanceRadius = 1000;
@@ -43,7 +40,8 @@ public class ModConfig {
         return structureWorldConfigs;
     }
 
-    public static class StructureWorldConfig {
+    public static class StructureWorldConfig
+    {
 
         private final String structureIdentifier;
         private final String biomeIdentifier;
@@ -125,7 +123,8 @@ public class ModConfig {
             return isBedrockFlat;
         }
 
-        public static class StructureDimensionConfig {
+        public static class StructureDimensionConfig
+        {
             private final boolean voidMode;
 
             public StructureDimensionConfig(boolean voidMode) {

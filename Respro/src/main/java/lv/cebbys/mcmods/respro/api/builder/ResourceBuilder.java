@@ -6,7 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-public interface ResourceBuilder<I, R extends AbstractResource> {
+public interface ResourceBuilder<I, R extends AbstractResource>
+{
     @NotNull I getInitializer();
 
     default void initialize(@NotNull Consumer<I> consumer) {

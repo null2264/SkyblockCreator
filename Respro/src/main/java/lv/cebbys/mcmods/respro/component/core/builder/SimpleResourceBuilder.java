@@ -8,7 +8,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-public class SimpleResourceBuilder<I, R extends AbstractResource> implements ResourceBuilder<I, R> {
+public class SimpleResourceBuilder<I, R extends AbstractResource> implements ResourceBuilder<I, R>
+{
     private final R resource;
 
     @SuppressWarnings("all")

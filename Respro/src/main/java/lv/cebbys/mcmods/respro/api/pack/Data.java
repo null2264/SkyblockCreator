@@ -16,25 +16,11 @@ public class Data extends ResourcePackProfile
 {
     Identifier location;
 
-    public Data(
-            @NotNull Identifier packLocation,
-            @NotNull PackProfileResource packProfile,
-            @NotNull ResourcePackProfile.PackFactory supplier
-    ) {
-        super(
-                packLocation.toString(),
-                packProfile.isAlwaysEnabled(),
-                supplier,
-                Text.literal(packProfile.getName().getAsString()),
-                Objects.requireNonNull(loadMetadata(packLocation.toString(), supplier)),
-                ResourcePackCompatibility.from(packProfile.getMeta().getFormat(), ResourceType.SERVER_DATA),
-                packProfile.getPosition(),
-                packProfile.isPinned(),
-                ResourcePackSource.create((name) -> {
-                    Text text = Text.literal(packProfile.getSource().getAsString());
-                    return Text.translatable("pack.nameAndSource", name, text).formatted(Formatting.GRAY);
-                }, true)
-        );
+    public Data(@NotNull Identifier packLocation, @NotNull PackProfileResource packProfile, @NotNull ResourcePackProfile.PackFactory supplier) {
+        super(packLocation.toString(), packProfile.isAlwaysEnabled(), supplier, Text.literal(packProfile.getName().getAsString()), Objects.requireNonNull(loadMetadata(packLocation.toString(), supplier)), ResourcePackCompatibility.from(packProfile.getMeta().getFormat(), ResourceType.SERVER_DATA), packProfile.getPosition(), packProfile.isPinned(), ResourcePackSource.create((name) -> {
+            Text text = Text.literal(packProfile.getSource().getAsString());
+            return Text.translatable("pack.nameAndSource", name, text).formatted(Formatting.GRAY);
+        }, true));
         location = packLocation;
     }
 }

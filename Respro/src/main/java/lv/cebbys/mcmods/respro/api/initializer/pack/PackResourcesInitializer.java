@@ -1,16 +1,14 @@
 package lv.cebbys.mcmods.respro.api.initializer.pack;
 
 import lv.cebbys.mcmods.respro.api.initializer.core.PackProfileResourceInitializer;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryBuilder;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
 @SuppressWarnings("all")
-public interface PackResourcesInitializer<T extends PackResourcesInitializer<?>> {
+public interface PackResourcesInitializer<T extends PackResourcesInitializer<?>>
+{
     @NotNull T setPackId(@NotNull Identifier id);
 
     @NotNull T setPackProfile(@NotNull Consumer<PackProfileResourceInitializer> consumer);

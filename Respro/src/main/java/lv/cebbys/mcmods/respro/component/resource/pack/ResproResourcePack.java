@@ -41,9 +41,9 @@ public abstract class ResproResourcePack<B extends PackResourcesInitializer<?>, 
     private static final ResproPackDump DUMP = new ResproPackDump();
 
     private final Map<Identifier, AbstractResource> resources = new HashMap<>();
-    private Identifier id;
     private final Set<String> assetNamespaces = new HashSet<>();
     private final Set<String> dataNamespaces = new HashSet<>();
+    private Identifier id;
     private PackProfileResource profile = new PackProfileResource();
     private boolean enabledDumpMode;
 
@@ -80,11 +80,7 @@ public abstract class ResproResourcePack<B extends PackResourcesInitializer<?>, 
         return getInstance();
     }
 
-    public @NotNull <I> B setResource(
-            Class<I> initializerClass,
-            Identifier location,
-            Consumer<I> consumer
-    ) {
+    public @NotNull <I> B setResource(Class<I> initializerClass, Identifier location, Consumer<I> consumer) {
         ResourceBuilder<I, ?> builder = ResproBuilders.supplyBuilder(initializerClass);
         if (builder == null) {
             return getInstance();
@@ -111,16 +107,14 @@ public abstract class ResproResourcePack<B extends PackResourcesInitializer<?>, 
 
     @Override
     public InputSupplier<InputStream> open(ResourceType type, Identifier id) {
-        if (hasResource(type, id))
-            return () -> resources.get(id).getAsStream();
+        if (hasResource(type, id)) return () -> resources.get(id).getAsStream();
         return null;
     }
 
     @Override
     public void findResources(ResourceType type, String namespace, String prefix, ResultConsumer visitor) {
         resources.forEach((key, value) -> {
-            if (!(key.getPath().startsWith(prefix) && resources.get(key).belongsTo(type)))
-                return;
+            if (!(key.getPath().startsWith(prefix) && resources.get(key).belongsTo(type))) return;
             visitor.accept(key, value::getAsStream);
         });
     }
@@ -133,9 +127,7 @@ public abstract class ResproResourcePack<B extends PackResourcesInitializer<?>, 
             throw new FileNotFoundException("Pack mcmeta was not found for pack: " + id);
         if (resources.get(metaId) instanceof MetaResource metaResource) {
             JsonObject meta = metaResource.getAsJsonObject();
-            return meta.has(reader.getKey())
-                    ? reader.fromJson(meta.getAsJsonObject(reader.getKey()))
-                    : null;
+            return meta.has(reader.getKey()) ? reader.fromJson(meta.getAsJsonObject(reader.getKey())) : null;
         } else {
             throw new FileNotFoundException("Invalid metadata for pack: " + id);
         }

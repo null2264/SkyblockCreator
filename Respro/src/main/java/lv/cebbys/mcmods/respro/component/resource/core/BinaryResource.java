@@ -8,7 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-public class BinaryResource extends AbstractResource {
+public class BinaryResource extends AbstractResource
+{
     private byte[] content;
     private boolean nullable;
 

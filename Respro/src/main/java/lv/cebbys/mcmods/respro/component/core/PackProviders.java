@@ -22,12 +22,9 @@ public class PackProviders
     public static final PackListProvider<Data> RESPRO_DATA_PROVIDER;
 
     static {
-        DATA_PROFILE_PROVIDER = new SimpleRegistry<>(
-                RegistryKey.ofRegistry(new Identifier(Respro.MODID, "data_profile_suppliers")),
-                Lifecycle.stable(),
-                false
-        );
-        RESPRO_DATA_PROVIDER = new DataListProvider() {
+        DATA_PROFILE_PROVIDER = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Respro.MODID, "data_profile_suppliers")), Lifecycle.stable(), false);
+        RESPRO_DATA_PROVIDER = new DataListProvider()
+        {
             private final Identifier id = new Identifier(RESPRO, "respro_data_supplier");
 
             @Override
@@ -37,9 +34,7 @@ public class PackProviders
 
             @Override
             public @NotNull List<Data> getPacks() {
-                return PackProviders.DATA_PROFILE_PROVIDER.stream()
-                        .map(DataProvider::getPack)
-                        .toList();
+                return PackProviders.DATA_PROFILE_PROVIDER.stream().map(DataProvider::getPack).toList();
             }
         };
     }

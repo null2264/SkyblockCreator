@@ -20,9 +20,7 @@ public class DimensionResource extends AbstractJsonObjectResource implements Dim
     @JsonPart("generator")
     private ChunkGeneratorResource chunkGenerator;
 
-    public @NotNull DimensionResourceInitializer setChunkGenerator(
-            Consumer<ChunkGeneratorResourceInitializer> chunkGeneratorConsumer
-    ) {
+    public @NotNull DimensionResourceInitializer setChunkGenerator(Consumer<ChunkGeneratorResourceInitializer> chunkGeneratorConsumer) {
         ChunkGeneratorResource chunkGenerator = new ChunkGeneratorResource(type.getPath());
         chunkGeneratorConsumer.accept(chunkGenerator);
         this.chunkGenerator = chunkGenerator;

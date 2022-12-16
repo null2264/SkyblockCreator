@@ -18,7 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.InputStream;
 import java.util.function.Consumer;
 
-public class PackProfileResource extends AbstractResource implements PackProfileResourceInitializer {
+public class PackProfileResource extends AbstractResource implements PackProfileResourceInitializer
+{
     private final ImageResource icon;
     private final StringResource name;
     private final StringResource source;

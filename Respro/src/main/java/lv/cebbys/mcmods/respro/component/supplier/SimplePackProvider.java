@@ -10,7 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class SimplePackProvider<T extends ResourcePackProfile> {
+public class SimplePackProvider<T extends ResourcePackProfile>
+{
     private final Supplier<ResproResourcePack<?, ?>> packResources;
     private final Function<ResproResourcePack<?, ?>, Data> packCreator;
 

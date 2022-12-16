@@ -5,7 +5,8 @@ import lv.cebbys.mcmods.respro.component.resource.core.BinaryResource;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public class ResourceUtils {
+public class ResourceUtils
+{
     public static <T extends BinaryResource> T createResource(Class<T> clazz) {
         Throwable error;
         try {

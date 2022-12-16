@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Mixin(MoreOptionsDialog.class)
-public abstract class MoreOptionsMixin {
+public abstract class MoreOptionsMixin
+{
 
     @Shadow
     private Optional<RegistryEntry<WorldPreset>> presetEntry;
@@ -31,15 +32,11 @@ public abstract class MoreOptionsMixin {
     @Shadow
     abstract void apply(GeneratorOptionsHolder.RegistryAwareModifier modifier);
 
-    @Redirect(
-            method = "init(Lnet/minecraft/client/gui/screen/world/CreateWorldScreen;Lnet/minecraft/client/MinecraftClient;Lnet/minecraft/client/font/TextRenderer;)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/world/MoreOptionsDialog;collectPresets(Lnet/minecraft/registry/Registry;Lnet/minecraft/registry/tag/TagKey;)Ljava/util/Optional;")
-    )
+    @Redirect(method = "init(Lnet/minecraft/client/gui/screen/world/CreateWorldScreen;Lnet/minecraft/client/MinecraftClient;Lnet/minecraft/client/font/TextRenderer;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/world/MoreOptionsDialog;collectPresets(Lnet/minecraft/registry/Registry;Lnet/minecraft/registry/tag/TagKey;)Ljava/util/Optional;"))
     public Optional<List<RegistryEntry<WorldPreset>>> interceptPresets(Registry<WorldPreset> presetRegistry, TagKey<WorldPreset> tag) {
         Optional<List<RegistryEntry<WorldPreset>>> presets = collectPresets(presetRegistry, tag);
         Mod.LOGGER.info(presets.toString());
-        if (tag.equals(WorldPresetTags.EXTENDED) || presets.isEmpty())
-            return presets;
+        if (tag.equals(WorldPresetTags.EXTENDED) || presets.isEmpty()) return presets;
 
         ArrayList<RegistryEntry<WorldPreset>> mutablePresets = new ArrayList<>(presets.get());
         Mod.LOGGER.info(Mod.TO_BE_DISPLAYED.toString());
@@ -49,8 +46,7 @@ public abstract class MoreOptionsMixin {
                 mutablePresets.add(0, worldPreset);
                 this.presetEntry = Optional.of(worldPreset);
                 this.apply((dynamicRegistryManager, dimensionsRegistryHolder) -> worldPreset.value().createDimensionsRegistryHolder());
-            } else
-                mutablePresets.add(worldPreset);
+            } else mutablePresets.add(worldPreset);
         });
 
         return Optional.of(mutablePresets);

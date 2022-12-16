@@ -21,7 +21,8 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class StructureWorldState extends PersistentState {
+public class StructureWorldState extends PersistentState
+{
 
     private final HashMap<UUID, BlockPos> playerMap = new HashMap<>();
     private int x, y, dx, dy;
@@ -169,18 +170,15 @@ public class StructureWorldState extends PersistentState {
         }
         BlockPos islandPos = this.getIsland(uuid);
         if (islandPos == null) {
-            if (!uuid.equals(Util.NIL_UUID) && !forceTeleport)
-                throw new NoIslandFound();
+            if (!uuid.equals(Util.NIL_UUID) && !forceTeleport) throw new NoIslandFound();
             else {
                 BlockPos spawnIsland = this.getSpawnIsland();
                 islandPos = spawnIsland != null ? spawnIsland : this.generateIsland(world);
             }
         }
 
-        if (forceTeleport)
-            player.setPosition(islandPos.getX(), islandPos.getY(), islandPos.getZ());
-        else
-            player.teleport(islandPos.getX(), islandPos.getY(), islandPos.getZ());
+        if (forceTeleport) player.setPosition(islandPos.getX(), islandPos.getY(), islandPos.getZ());
+        else player.teleport(islandPos.getX(), islandPos.getY(), islandPos.getZ());
     }
 
     @Override

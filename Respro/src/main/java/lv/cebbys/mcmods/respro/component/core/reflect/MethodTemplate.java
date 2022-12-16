@@ -2,7 +2,8 @@ package lv.cebbys.mcmods.respro.component.core.reflect;
 
 import java.lang.reflect.Method;
 
-public class MethodTemplate<P, R> {
+public class MethodTemplate<P, R>
+{
     private final Class<R> returnType;
     private final String name;
     private final Class<?>[] parameters;

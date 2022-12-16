@@ -14,7 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class ResourceParser {
+public class ResourceParser
+{
     private static final Logger LOGGER = LoggerFactory.getLogger(Respro.class);
 
     public JsonObject parse(Object object) {

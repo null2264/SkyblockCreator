@@ -2,16 +2,10 @@ package lv.cebbys.mcmods.respro.component.mapper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
-public abstract class ResourceWrapper<K, T> {
+public abstract class ResourceWrapper<K, T>
+{
     protected Map<K, T> data = new LinkedHashMap<>();
 
     protected abstract Class<?> wrappedClass();
@@ -30,9 +24,9 @@ public abstract class ResourceWrapper<K, T> {
 
     protected T resource(Set<K> names) {
         T resource = createResource();
-        if(names.stream().anyMatch(Objects::isNull)) {
+        if (names.stream().anyMatch(Objects::isNull)) {
 //            ResproLogger.fail("Specified keys contains null " + names);
-        } else if(names.stream().anyMatch(key -> data.containsKey(key))) {
+        } else if (names.stream().anyMatch(key -> data.containsKey(key))) {
 //            ResproLogger.fail("Resources are already present with specified keys " + names);
         } else {
             names.forEach(name -> {

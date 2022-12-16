@@ -23,13 +23,7 @@ public abstract class ResourcePackManagerMixin
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(Respro.class);
 
-    @Redirect(
-            method = "<init>*",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lcom/google/common/collect/ImmutableSet;copyOf([Ljava/lang/Object;)Lcom/google/common/collect/ImmutableSet;"
-            )
-    )
+    @Redirect(method = "<init>*", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableSet;copyOf([Ljava/lang/Object;)Lcom/google/common/collect/ImmutableSet;"))
     private <E> ImmutableSet<Object> appendResourcePackSuppliers(E[] elements) {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
             LOGGER.info("Appending data pack profile providers for server");

@@ -6,7 +6,6 @@ import lv.cebbys.mcmods.respro.api.initializer.worldgen.worldpreset.ChunkGenerat
 import lv.cebbys.mcmods.respro.component.mapper.JsonPart;
 import lv.cebbys.mcmods.respro.component.resource.AbstractJsonObjectResource;
 import lv.cebbys.mcmods.respro.exception.ResourceValidationException;
-import net.minecraft.block.BlockState;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.ResourceType;
@@ -50,9 +49,7 @@ public class ChunkGeneratorResource extends AbstractJsonObjectResource implement
         this.dimension = dimension;
     }
 
-    public @NotNull ChunkGeneratorResourceInitializer setBiomeSource(
-            Consumer<BiomeSourceResourceInitializer> biomeSauceConsumer
-    ) {
+    public @NotNull ChunkGeneratorResourceInitializer setBiomeSource(Consumer<BiomeSourceResourceInitializer> biomeSauceConsumer) {
         /*
         BiomeSource biomeSource = chunkGenerator.getBiomeSource();
         Identifier preset = null;

@@ -11,7 +11,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.function.Supplier;
 
-public class ImageResource extends AbstractResource implements ImageResourceInitializer {
+public class ImageResource extends AbstractResource implements ImageResourceInitializer
+{
     private Supplier<InputStream> streamFactory = InputStream::nullInputStream;
 
     @Override

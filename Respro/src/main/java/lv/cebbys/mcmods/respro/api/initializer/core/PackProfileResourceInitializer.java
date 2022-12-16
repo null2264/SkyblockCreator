@@ -5,7 +5,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-public interface PackProfileResourceInitializer {
+public interface PackProfileResourceInitializer
+{
     @NotNull PackProfileResourceInitializer setPackIcon(@NotNull Consumer<ImageResourceInitializer> consumer);
 
     @NotNull PackProfileResourceInitializer setPackName(@NotNull Consumer<StringResourceInitializer> consumer);

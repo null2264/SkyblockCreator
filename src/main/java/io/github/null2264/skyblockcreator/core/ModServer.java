@@ -6,7 +6,8 @@ import net.minecraft.util.Identifier;
 
 import static io.github.null2264.skyblockcreator.Mod.OVERRIDED_LEVEL_TYPE;
 
-public class ModServer implements DedicatedServerModInitializer {
+public class ModServer implements DedicatedServerModInitializer
+{
 
     @Override
     public void onInitializeServer() {

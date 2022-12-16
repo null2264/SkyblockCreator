@@ -9,7 +9,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayerEntity.class)
-public class PlayerEntityMixin {
+public class PlayerEntityMixin
+{
 
     @Inject(method = "moveToSpawn", at = @At("TAIL"))
     private void doSpawn(ServerWorld world, CallbackInfo ci) {

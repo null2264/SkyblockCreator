@@ -13,13 +13,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class ResproDataPack extends ResproResourcePack<ResproDataPack, DataProvider> implements DataResourcesInitializer {
+public class ResproDataPack extends ResproResourcePack<ResproDataPack, DataProvider> implements DataResourcesInitializer
+{
 
     @Override
     public DataProvider getProvider() {
-        return new SimpleDataProvider(this::getInstance, (resources) -> new Data(
-                resources.getId(), resources.getProfile(), ignored -> resources
-        ));
+        return new SimpleDataProvider(this::getInstance, (resources) -> new Data(resources.getId(), resources.getProfile(), ignored -> resources));
     }
 
     @Override
@@ -29,20 +28,12 @@ public class ResproDataPack extends ResproResourcePack<ResproDataPack, DataProvi
 
     @Override
     public @NotNull("DataResourcesInitializer is null") DataResourcesInitializer setWorldPreset(@NotNull("Identifier provided was null") Identifier id, @NotNull("WorldPresetResourceInitializer consumer was null") Consumer<WorldPresetResourceInitializer> consumer) {
-        return setResource(
-                WorldPresetResourceInitializer.class,
-                IdentifierUtils.wrapped("worldgen/world_preset/", id, ".json"),
-                consumer
-        );
+        return setResource(WorldPresetResourceInitializer.class, IdentifierUtils.wrapped("worldgen/world_preset/", id, ".json"), consumer);
     }
 
     @Override
     public @NotNull("DataResourcesInitializer is null") DataResourcesInitializer setWorldPresetsTag(@NotNull("WorldPresetsResourceInitializer consumer was null") Consumer<WorldPresetsResourceInitializer> consumer) {
-        return setResource(
-                WorldPresetsResourceInitializer.class,
-                IdentifierUtils.wrapped("tags/worldgen/world_preset/", Objects.requireNonNull(Identifier.of("minecraft", "normal")), ".json"),
-                consumer
-        );
+        return setResource(WorldPresetsResourceInitializer.class, IdentifierUtils.wrapped("tags/worldgen/world_preset/", Objects.requireNonNull(Identifier.of("minecraft", "normal")), ".json"), consumer);
     }
 
     @Override

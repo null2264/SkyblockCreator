@@ -12,8 +12,7 @@ public interface PackListProvider<T extends ResourcePackProfile> extends Resourc
 {
     @NotNull Identifier getId();
 
-    @NotNull
-    List<T> getPacks();
+    @NotNull List<T> getPacks();
 
     @Override
     default void register(Consumer<ResourcePackProfile> consumer) {

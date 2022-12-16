@@ -10,7 +10,8 @@ import java.util.function.Consumer;
 
 import static lv.cebbys.mcmods.respro.Respro.LOGGER;
 
-public class ResproRegistry {
+public class ResproRegistry
+{
 
     public static void registerData(DataProvider provider) {
         LOGGER.info(provider.getId().toString());

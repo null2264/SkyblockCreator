@@ -9,7 +9,10 @@ import org.jetbrains.annotations.NotNull;
 public interface BiomeSourceResourceInitializer
 {
     @NotNull BiomeSourceResourceInitializer setValues(Identifier type, Identifier preset);
+
     @NotNull BiomeSourceResourceInitializer setFromCodec(Codec<? extends BiomeSource> biomeSourceCodec);
+
     @NotNull BiomeSourceResourceInitializer setFromCodec(Codec<? extends BiomeSource> biomeSourceCodec, Identifier biomeId);
+
     @NotNull BiomeSourceResourceInitializer setFromCodec(Codec<? extends BiomeSource> biomeSourceCodec, MultiNoiseBiomeSource.Preset preset);
 }

@@ -26,21 +26,10 @@ import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public class StructureChunkGenerator extends ChunkGenerator {
+public class StructureChunkGenerator extends ChunkGenerator
+{
 
-    public static final Codec<StructureChunkGenerator> CODEC = RecordCodecBuilder.create((instance) ->
-            instance.group(
-                    Codec.STRING.stable().fieldOf("dimension").forGetter((generator) -> generator.dimension),
-                    BiomeSource.CODEC.fieldOf("biome_source").forGetter((generator) -> generator.biomeSource),
-                    Codec.STRING.stable().fieldOf("structure").forGetter((generator) -> generator.structure),
-                    BlockPos.CODEC.fieldOf("structureOffset").forGetter((generator) -> generator.structureOffset),
-                    BlockPos.CODEC.fieldOf("playerSpawnOffset").forGetter((generator) -> generator.playerSpawnOffset),
-                    Identifier.CODEC.optionalFieldOf("fillmentBlock", Identifier.of("minecraft", "air")).stable().forGetter((generator) -> generator.fillmentBlock),
-                    Codec.BOOL.optionalFieldOf("enableTopBedrock", false).stable().forGetter((generator) -> generator.enableTopBedrock),
-                    Codec.BOOL.optionalFieldOf("enableBottomBedrock", false).stable().forGetter((generator) -> generator.enableBottomBedrock),
-                    Codec.BOOL.optionalFieldOf("isBedrockFlat", false).stable().forGetter((generator) -> generator.isBedrockFlat)
-            ).apply(instance, instance.stable(StructureChunkGenerator::new))
-    );
+    public static final Codec<StructureChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.stable().fieldOf("dimension").forGetter((generator) -> generator.dimension), BiomeSource.CODEC.fieldOf("biome_source").forGetter((generator) -> generator.biomeSource), Codec.STRING.stable().fieldOf("structure").forGetter((generator) -> generator.structure), BlockPos.CODEC.fieldOf("structureOffset").forGetter((generator) -> generator.structureOffset), BlockPos.CODEC.fieldOf("playerSpawnOffset").forGetter((generator) -> generator.playerSpawnOffset), Identifier.CODEC.optionalFieldOf("fillmentBlock", Identifier.of("minecraft", "air")).stable().forGetter((generator) -> generator.fillmentBlock), Codec.BOOL.optionalFieldOf("enableTopBedrock", false).stable().forGetter((generator) -> generator.enableTopBedrock), Codec.BOOL.optionalFieldOf("enableBottomBedrock", false).stable().forGetter((generator) -> generator.enableBottomBedrock), Codec.BOOL.optionalFieldOf("isBedrockFlat", false).stable().forGetter((generator) -> generator.isBedrockFlat)).apply(instance, instance.stable(StructureChunkGenerator::new)));
     private final String structure;
     private final BlockPos structureOffset;
     private final BlockPos playerSpawnOffset;
@@ -49,10 +38,6 @@ public class StructureChunkGenerator extends ChunkGenerator {
     private final boolean enableBottomBedrock;
     private final boolean isBedrockFlat;
     private final String dimension;
-
-    public BlockState getFillmentBlock() {
-        return Registries.BLOCK.get(fillmentBlock).getDefaultState();
-    }
 
     public StructureChunkGenerator(String dimension, BiomeSource biomeSource, String structure, BlockPos structureOffset, BlockPos playerSpawnOffset, Identifier fillmentBlock, boolean enableTopBedrock, boolean enableBottomBedrock, boolean isBedrockFlat) {
         super(biomeSource);
@@ -64,6 +49,10 @@ public class StructureChunkGenerator extends ChunkGenerator {
         this.enableBottomBedrock = enableBottomBedrock;
         this.isBedrockFlat = isBedrockFlat;
         this.dimension = dimension;
+    }
+
+    public BlockState getFillmentBlock() {
+        return Registries.BLOCK.get(fillmentBlock).getDefaultState();
     }
 
     public String getStructure() {
@@ -91,8 +80,7 @@ public class StructureChunkGenerator extends ChunkGenerator {
 
             BlockPos.iterate(startX, 0, startZ, startX + 15, getWorldHeight(), startZ + 15).forEach(blockPos -> chunk.setBlockState(blockPos, getFillmentBlock(), false));
         }
-        if (enableTopBedrock || enableBottomBedrock)
-            buildBedrock(chunk, new Random(RandomSeed.getSeed()));
+        if (enableTopBedrock || enableBottomBedrock) buildBedrock(chunk, new Random(RandomSeed.getSeed()));
     }
 
     @Override

@@ -7,7 +7,8 @@ import lv.cebbys.mcmods.respro.exception.ResourceValidationException;
 import net.minecraft.resource.ResourceType;
 import org.jetbrains.annotations.NotNull;
 
-public final class MetaResource extends AbstractJsonObjectResource implements MetaResourceInitializer {
+public final class MetaResource extends AbstractJsonObjectResource implements MetaResourceInitializer
+{
     @JsonPart(value = "pack/description")
     private String description;
     @JsonPart(value = "pack/pack_format")

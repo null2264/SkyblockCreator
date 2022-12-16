@@ -6,7 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 
-public abstract class AbstractResource {
+public abstract class AbstractResource
+{
     public abstract @NotNull("AbstractResource stream is null") InputStream getAsStream();
 
     public abstract boolean belongsTo(@NotNull("Provided ResourceType is null") ResourceType type);
