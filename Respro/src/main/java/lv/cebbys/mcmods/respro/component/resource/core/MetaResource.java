@@ -3,6 +3,7 @@ package lv.cebbys.mcmods.respro.component.resource.core;
 import lv.cebbys.mcmods.respro.api.initializer.core.MetaResourceInitializer;
 import lv.cebbys.mcmods.respro.component.mapper.JsonPart;
 import lv.cebbys.mcmods.respro.component.resource.AbstractJsonObjectResource;
+import lv.cebbys.mcmods.respro.constant.ResproConstants;
 import lv.cebbys.mcmods.respro.exception.ResourceValidationException;
 import net.minecraft.resource.ResourceType;
 import org.jetbrains.annotations.NotNull;
@@ -14,13 +15,13 @@ public final class MetaResource extends AbstractJsonObjectResource implements Me
     @JsonPart(value = "pack/pack_format")
     private int format;
 
-    public MetaResource(@NotNull String packDescription, int packFormat) {
+    public MetaResource(@NotNull String packDescription) {
         description = packDescription;
-        format = packFormat;
+        format = ResproConstants.PACK_FORMAT;
     }
 
     public MetaResource() {
-        this("", 0);
+        this("");
     }
 
     @Override

@@ -1,4 +1,5 @@
 accessWidener v2 named
 
+accessible method net/minecraft/client/gui/screen/world/WorldCreator getWorldPresetList (Lnet/minecraft/registry/Registry;Lnet/minecraft/registry/tag/TagKey;)Ljava/util/Optional;
 extendable method net/minecraft/world/gen/WorldPresets <init> ()V
 accessible method net/minecraft/client/gui/screen/world/CreateWorldScreen <init> (Lnet/minecraft/client/gui/screen/Screen;Lnet/minecraft/resource/DataConfiguration;Lnet/minecraft/client/gui/screen/world/MoreOptionsDialog;)V

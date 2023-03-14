@@ -17,4 +17,6 @@ public class ResproConstants
     }, true);
     public static final Identifier RESPRO_PACK_MCMETA_LOCATION = new Identifier(RESPRO, PACK_MCMETA_PATH);
     public static final Identifier RESPRO_PACK_ICON_LOCATION = new Identifier(RESPRO, PACK_ICON_PATH);
+    // REF: https://minecraft.fandom.com/wiki/Data_pack#Pack_format
+    public static final Integer PACK_FORMAT = 12;
 }

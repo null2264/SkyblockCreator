@@ -32,7 +32,7 @@ public class PackProfileResource extends AbstractResource implements PackProfile
         icon = new ImageResource();
         name = new StringResource();
         source = new StringResource(ResproConstants.PACK_SOURCE_STRING_RESPRO);
-        meta = new MetaResource("Respro Generated Pack", ResourceType.CLIENT_RESOURCES.getPackVersion(SharedConstants.getGameVersion()));
+        meta = new MetaResource("Respro Generated Pack");
         position = ResourcePackProfile.InsertionPosition.TOP;
         alwaysEnabled = false;
         pinned = false;

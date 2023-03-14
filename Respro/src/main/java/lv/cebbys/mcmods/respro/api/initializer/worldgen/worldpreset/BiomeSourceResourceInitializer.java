@@ -1,9 +1,10 @@
 package lv.cebbys.mcmods.respro.api.initializer.worldgen.worldpreset;
 
 import com.mojang.serialization.Codec;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.source.BiomeSource;
-import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
+import net.minecraft.world.biome.source.MultiNoiseBiomeSourceParameterList;
 import org.jetbrains.annotations.NotNull;
 
 public interface BiomeSourceResourceInitializer
@@ -14,5 +15,5 @@ public interface BiomeSourceResourceInitializer
 
     @NotNull BiomeSourceResourceInitializer setFromCodec(Codec<? extends BiomeSource> biomeSourceCodec, Identifier biomeId);
 
-    @NotNull BiomeSourceResourceInitializer setFromCodec(Codec<? extends BiomeSource> biomeSourceCodec, MultiNoiseBiomeSource.Preset preset);
+    @NotNull BiomeSourceResourceInitializer setFromCodec(Codec<? extends BiomeSource> biomeSourceCodec, RegistryKey<MultiNoiseBiomeSourceParameterList> preset);
 }

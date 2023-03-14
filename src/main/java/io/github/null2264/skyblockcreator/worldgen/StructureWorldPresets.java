@@ -2,6 +2,7 @@ package io.github.null2264.skyblockcreator.worldgen;
 
 import io.github.null2264.skyblockcreator.Mod;
 import lv.cebbys.mcmods.respro.api.ResproRegistry;
+import lv.cebbys.mcmods.respro.constant.ResproConstants;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
 import net.minecraft.registry.RegistryKey;
@@ -9,6 +10,7 @@ import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.source.FixedBiomeSource;
 import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
+import net.minecraft.world.biome.source.MultiNoiseBiomeSourceParameterLists;
 import net.minecraft.world.biome.source.TheEndBiomeSource;
 import net.minecraft.world.dimension.DimensionTypes;
 import net.minecraft.world.gen.WorldPreset;
@@ -33,7 +35,7 @@ public class StructureWorldPresets
                 profile.setPackIcon(icon -> icon.setFromResources(Mod.class, "assets/skyblockcreator/icon.png"));
                 profile.setPackMeta(meta -> {
                     meta.setDescription("SkyblockCreator's Internal Datapack");
-                    meta.setFormat(ResourceType.CLIENT_RESOURCES.getPackVersion(SharedConstants.getGameVersion()));
+                    meta.setFormat(ResproConstants.PACK_FORMAT);
                 });
             });
             Mod.CONFIG.getStructureWorldConfigs().forEach(config -> {
@@ -58,7 +60,7 @@ public class StructureWorldPresets
                             } else {
                                 chunkGenerator.setFromCodec(NoiseChunkGenerator.CODEC, ChunkGeneratorSettings.NETHER);
                             }
-                            chunkGenerator.setBiomeSource(biomeSource -> biomeSource.setFromCodec(MultiNoiseBiomeSource.CODEC, MultiNoiseBiomeSource.Preset.NETHER));
+                            chunkGenerator.setBiomeSource(biomeSource -> biomeSource.setFromCodec(MultiNoiseBiomeSource.CODEC, MultiNoiseBiomeSourceParameterLists.NETHER));
                         });
                     });
 
