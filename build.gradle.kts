@@ -141,9 +141,10 @@ allprojects {
 }
  */
 
+// Dependencies for SkyblockCreator
 dependencies {
 
-    "fr.catcore:server-translations-api:${project["server_translation"]}".apply {
+    "xyz.nucleoid:server-translations-api:${project["server_translation"]}".apply {
         include(this)
         modImplementation(this)
     }
